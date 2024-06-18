@@ -36,6 +36,7 @@ function Playerteamview() {
             },
           });
           const responseData = await response.json();
+          console.log(responseData)
           seydisplay(responseData.data[0]);
           setimg1(responseData?.data?.[0]?.team?.other_photo)
           setimg2(responseData?.data?.[0]?.player?.player_photo)

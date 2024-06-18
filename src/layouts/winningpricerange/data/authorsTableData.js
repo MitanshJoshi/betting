@@ -118,7 +118,7 @@ export default function AuthorsTableData({ handleDelete, Display,contest}) {
               color="text"
               fontWeight="medium"
             >
-              {e?.contest_type?.[0].contest_type}
+              {e?.contest_type?.[0].contest_type || " "}
             </MDTypography>
           ),
         action: (
