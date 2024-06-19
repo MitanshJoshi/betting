@@ -81,11 +81,9 @@ export default function AuthorsTableData({ handleDelete, Display,teamname,short,
     rows: Display
     .filter(
       (item) =>
-        item?.team?.[0]?.team_name.toLowerCase().includes(teamname.toLowerCase()) &&
-        item?.team?.[0]?.short_name.toLowerCase().includes(short.toLowerCase()) &&
-        item?.captain?.[0]?.player_name.toLowerCase().includes(captain.toLowerCase()) &&
-        item?.vice_captain?.[0]?.player_name.toLowerCase().includes(visecaptain.toLowerCase()) &&
-        item?.player?.[0]?.player_name.toLowerCase().includes(player.toLowerCase()) 
+        item?.team?.[0]?.team_name.toLowerCase()?.includes(teamname.toLowerCase()) &&
+        item?.team?.[0]?.short_name.toLowerCase()?.includes(short.toLowerCase()) &&
+        item?.player?.[0]?.player_name.toLowerCase()?.includes(player.toLowerCase()) 
         // (leaguename === "" || item.leagueData?.[0]?.league_name.toLowerCase() === leaguename.toLowerCase())
     ).map((e) => ({
         team_name: (

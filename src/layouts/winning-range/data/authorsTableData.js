@@ -106,7 +106,7 @@ export default function AuthorsTableData({ handleDelete, Display }) {
         </MDTypography>
       ),
       view: (
-        <MDTypography component="a" href={`/view-contest/${e._id}`} variant="caption" color="text" fontWeight="medium">
+        <MDTypography component="a" href={`/view-contest/${e.contest_id}`} variant="caption" color="text" fontWeight="medium">
           View
         </MDTypography>
       ),

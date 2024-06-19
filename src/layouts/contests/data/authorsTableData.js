@@ -46,7 +46,7 @@ export default function AuthorsTableData(contest, leaguename, prize, entry, tota
     rows: League.filter((item) =>
         item?.contestTypeData?.[0]?.contest_type.toLowerCase().includes(contest.toLowerCase()) &&
         item?.leagueData?.[0]?.league_name.toLowerCase().includes(leaguename.toLowerCase()) &&
-        item?.profit.toLowerCase().includes(profite.toLowerCase()) &&
+        item?.profit.toString().toLowerCase().includes(profite.toLowerCase()) &&
         item?.price_pool.toString().includes(prize.toLowerCase()) &&
         item?.entry_fees.toString().includes(entry.toLowerCase()) &&
         item?.total_participant.toString().includes(total.toString()) &&

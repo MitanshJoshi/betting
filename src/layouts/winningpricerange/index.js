@@ -150,7 +150,6 @@ const Winningpricerange = () => {
     fetchData();
   }, []);
   const [contest, setcontest] = useState("");
-  console.log(contest)
 
 
   const handlecontest = (event) => {
