@@ -193,7 +193,7 @@ const routes = [
     // },
     {
         type: "collapse",
-        name: "winning-range",
+        name: "Winning Range",
         key: "winning-range",
         icon: <Icon fontSize="small">people</Icon>,
         route: "/winning-range",

@@ -18,7 +18,6 @@ import Typography from "@mui/material/Typography";
 function Viewwinning() {
   const { _id } = useParams();
   const [display, seydisplay] = useState("");
-  console.log(display);
   const [img, setimg] = useState("");
   const fetchData = async () => {
     try {
