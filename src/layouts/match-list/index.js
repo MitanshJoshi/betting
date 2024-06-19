@@ -38,7 +38,6 @@ const Matchdetail = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const [leagueId, setLeagueId] = useState("");
     const [leagues, setLeagues] = useState([]);
-    const [leaguename, setleaguename] = useState("");
     const [team1, setteam1] = useState("");
     const [team2, setteam2] = useState("");
     const [vanue, setvanue] = useState("");
@@ -58,6 +57,7 @@ const Matchdetail = () => {
             });
             const responseData = await response.json();
             setLeagues(responseData.data);
+            setLeagueId(responseData.data[0]._id);
             console.log(responseData.data);
         } catch (error) {
             console.error("Error fetching data from the backend", error);
@@ -100,7 +100,6 @@ const Matchdetail = () => {
             (league) => league._id === e.target.value
         );
         setLeagueId(selectedLeague._id);
-        setleaguename(selectedLeague.league_name);
     };
 
     const handleState = (e) => {
@@ -135,15 +134,13 @@ const Matchdetail = () => {
     };
 
     const { columns, rows } = Data(
-        leaguename,
         team1,
         team2,
         vanue,
         country,
         state,
         city,
-        leagueId,
-        leagues
+        leagueId
     );
 
     const shouldShowAddButton = () => {
@@ -158,39 +155,34 @@ const Matchdetail = () => {
         <DashboardLayout>
             <DashboardNavbar />
             <div className="d-flex align-item-center gap-3 mt-5">
-                <div className="league">
-                    <FormControl fullWidth sx={{ paddingY: "20px" }}>
-                        <InputLabel id="league-select-label">League</InputLabel>
+                <div className="city">
+                    <FormControl fullWidth>
+                        <InputLabel
+                            style={{ paddingBottom: "10px" }}
+                            id="demo-simple-select-label"
+                        >
+                            League
+                        </InputLabel>
                         <Select
-                            labelId="league-select-label"
-                            id="league-select"
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
                             value={leagueId}
                             onChange={handleLeagueChange}
-                            style={{ width: "120px" }}
+                            style={{ width: "120px", height: "43px" }}
                         >
-                            {leagues?.map((league, id) => (
-                                <MenuItem
-                                    key={league._id}
-                                    value={league._id}
-                                    selected={id === 0}
-                                >
-                                    {league.league_name}
-                                </MenuItem>
-                            ))}
+                            {/* <MenuItem value="">Leagues</MenuItem> */}
+                            {leagues &&
+                                leagues.map((e, id) => (
+                                    <MenuItem
+                                        key={e._id}
+                                        value={e._id}
+                                        width="150px"
+                                    >
+                                        {e.league_name}
+                                        {id}
+                                    </MenuItem>
+                                ))}
                         </Select>
-                    </FormControl>
-                </div>
-                <div className="name">
-                    <FormControl fullWidth>
-                        <TextField
-                            id="outlined-basic"
-                            onChange={(e) => setleaguename(e.target.value)}
-                            value={leaguename}
-                            label="League Name"
-                            variant="outlined"
-                            style={{ width: "120px" }}
-                            disabled
-                        />
                     </FormControl>
                 </div>
                 <div className="number">

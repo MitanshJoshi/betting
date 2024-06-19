@@ -17,12 +17,11 @@ import Typography from '@mui/material/Typography';
 
 function Playerteamview() {
     const {_id}=useParams()
-    const [display,seydisplay]=useState("")
+    const [display,setdisplay]=useState("")
     const [img1,setimg1]=useState("")
     const [img2,setimg2]=useState("")
     const [img3,setimg3]=useState("")
     const [img4,setimg4]=useState("")
-    console.log(display)
     
 
     const fetchData = async () => {
@@ -37,7 +36,7 @@ function Playerteamview() {
           });
           const responseData = await response.json();
           console.log(responseData)
-          seydisplay(responseData.data[0]);
+          setdisplay(responseData.data[0]);
           setimg1(responseData?.data?.[0]?.team?.other_photo)
           setimg2(responseData?.data?.[0]?.player?.player_photo)
           setimg3(responseData?.data?.[0]?.captain?.player_photo)

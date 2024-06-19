@@ -3,15 +3,13 @@ import { BASE_URL } from "BASE_URL";
 import MDTypography from "components/MDTypography";
 
 export default function Data(
-    leaguename,
     team1,
     team2,
     vanue,
     country,
     state,
     city,
-    leagueId,
-    leagues
+    leagueId
 ) {
     const [team, setTeam] = useState([]);
 
@@ -41,8 +39,6 @@ export default function Data(
         }
     }, [leagueId]);
 
-    console.log(leaguename);
-
     return {
         columns: [
             { Header: "league Name", accessor: "league_name", align: "left" },
@@ -61,9 +57,6 @@ export default function Data(
         rows: team
             ?.filter(
                 (item) =>
-                    item?.league_details[0]?.league_name
-                        .toLowerCase()
-                        ?.includes(leaguename?.toLowerCase()) &&
                     item?.team_1_details[0]?.team_name
                         .toLowerCase()
                         ?.includes(team1?.toLowerCase()) &&

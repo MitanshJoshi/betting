@@ -44,7 +44,7 @@ import { number } from "prop-types";
 // import Countries from "";
 const Userlist = () => {
   const indiaObject = countrydata.find((country) => country.name === "India");
-  const [contact, setcontact] = useState();
+  const [contact, setcontact] = useState("");
   const [state, setstate] = useState("");
   const [city, setcity] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
