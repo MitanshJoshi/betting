@@ -142,7 +142,6 @@ const Winningrange = () => {
       });
       const responseData = await response.json();
       setDisplay(responseData.data);
-      console.log(responseData.data);
     } catch (error) {
       console.error("Error fetching data from the backend", error);
     }
@@ -156,8 +155,6 @@ const Winningrange = () => {
   const [league, setleague] = useState("");
   const [rank, setrank] = useState("");
   const [price, setprice] = useState("");
-  console.log(contest)
-
 
   const handlecontest = (event) => {
     setcontest(event.target.value);
