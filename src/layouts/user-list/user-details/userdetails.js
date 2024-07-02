@@ -106,7 +106,7 @@ const UserDetails = () => {
                                     sx={{ mx: 0 }}
                                 />
                             </Grid>
-                            {user.wallet_details && (
+                            {user && user.wallet_details && (
                                 <Grid
                                     item
                                     xs={12}
