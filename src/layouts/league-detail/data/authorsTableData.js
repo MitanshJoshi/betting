@@ -23,83 +23,116 @@ import MDButton from "components/MDButton";
 import { BASE_URL } from "BASE_URL";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import moment from "moment";
+import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-export default function AuthorsTableData(league,start,end) {
+const token = localStorage.getItem("token");
 
-  const [League, setleague] = useState([])
-  console.log(League)
-  const fetchData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      console.log(token)
-      const response = await fetch(`${BASE_URL}/api/league/displayList`, {
-        method: "GET",
-        headers: {
-          Authorization: token,
-        },
-      });
-      const responseData = await response.json();
-      setleague(responseData.data);
-      console.log(responseData.data)
-    } catch (error) {
-      console.error("Error fetching data from the backend", error);
-    }
-  };
+export default function AuthorsTableData(league, start, end, handleDelete) {
+    const [League, setleague] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+    const navigate = useNavigate();
 
-  return {
-    columns: [
-      { Header: "league_name", accessor: "league_name", align: "left" },
-      { Header: "start_date", accessor: "start_date", align: "left" },
-      { Header: "end_date", accessor: "end_date", align: "left" },
-      { Header: "edit", accessor: "action", align: "center" },
-      // { Header: "delete", accessor: "status", align: "center" },
-    ],
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/api/league/displayList`, {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+            const responseData = await response.json();
+            setleague(responseData.data);
+            console.log(responseData.data);
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
 
 
-    rows:League
-    .filter(
-      (item) =>
-        item?.league_name.toLowerCase().includes(league.toLowerCase()) && 
-        item?.start_date.toLowerCase().includes(start.toLowerCase()) && 
-        item?.end_date.toLowerCase().includes(end.toLowerCase())  
-        // (leaguename === "" || item.leagueData?.[0]?.league_name.toLowerCase() === leaguename.toLowerCase())
-    ).map((e) => ({
-      league_name: (
-        <MDTypography component="a" variant="caption" color="text" fontWeight="medium">
-          {e?.league_name}
-        </MDTypography>
-      ),
-      end_date: (
-        <MDTypography component="a" variant="caption" color="text" fontWeight="medium">
-          {e.end_date}
-        </MDTypography>
-      ),
-      start_date: (
-        <MDTypography component="a" variant="caption" color="text" fontWeight="medium">
-          {e.start_date}
-        </MDTypography>
-      ),
-      // status: (
-      //   <MDButton
-      //     variant="gradient"
-      //     color="error"
-      //     fullWidth
-      //     type="submit"
-      //     onClick={() => handleDelete(category._id)}
-      //   >
-      //     DELETE
-      //   </MDButton>
-      // ),
-      action: (
-        <MDTypography component="a" href={`/edit-league/${e._id}`} variant="caption" color="text" fontWeight="medium">
-          Edit
-        </MDTypography>
-      ),
-    }))
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-  };
+    return {
+        columns: [
+            { Header: "league_name", accessor: "league_name", align: "left" },
+            { Header: "start_date", accessor: "start_date", align: "left" },
+            { Header: "end_date", accessor: "end_date", align: "left" },
+            { Header: "delete", accessor: "status", align: "center" },
+            { Header: "edit", accessor: "action", align: "center" },
+        ],
+
+        rows: League.filter(
+            (item) =>
+                item?.league_name
+                    .toLowerCase()
+                    .includes(league.toLowerCase()) &&
+                item?.start_date.toLowerCase().includes(start.toLowerCase()) &&
+                item?.end_date.toLowerCase().includes(end.toLowerCase())
+            // (leaguename === "" || item.leagueData?.[0]?.league_name.toLowerCase() === leaguename.toLowerCase())
+        ).map((e) => ({
+            league_name: (
+                <MDTypography
+                    component="a"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                >
+                    {e?.league_name}
+                </MDTypography>
+            ),
+            end_date: (
+                <MDTypography
+                    component="a"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                >
+                    {moment(e.end_date).format("DD-MM-YYYY")}
+                </MDTypography>
+            ),
+            start_date: (
+                <MDTypography
+                    component="a"
+                    variant="caption"
+                    color="text"
+                    fontWeight="medium"
+                >
+                    {moment(e.start_date).format("DD-MM-YYYY")}
+                </MDTypography>
+            ),
+            status: (
+                <MDButton
+                    color="primary"
+                    size="small"
+                    onClick={() => handleDelete(e._id)}
+                >
+                    <Typography
+                        variant="caption"
+                        color="white"
+                        fontWeight="medium"
+                    >
+                        Delete
+                    </Typography>
+                </MDButton>
+            ),
+            action: (
+                <MDButton
+                    onClick={() => navigate(`/edit-league/${e._id}`)}
+                    color="info"
+                    size="small"
+                >
+                    <Typography
+                        variant="caption"
+                        color="white"
+                        fontWeight="medium"
+                    >
+                        Edit
+                    </Typography>
+                </MDButton>
+            ),
+        })),
+    };
 }

@@ -6,9 +6,15 @@ import { BASE_URL } from "BASE_URL";
 import axios from "axios";
 import { Filter } from "@material-ui/icons";
 import { number, string } from "prop-types";
+import { useNavigate } from "react-router-dom";
+import MDButton from "components/MDButton";
+import { Typography } from "@mui/material";
 
 const Data = (searchTerm, contact, email, state, city, country) => {
     const [user, setuser] = useState([]);
+
+    const navigate = useNavigate();
+
     const filterData = () => {
         return user?.filter((item) => {
             const nameMatch = item.name
@@ -117,7 +123,7 @@ const Data = (searchTerm, contact, email, state, city, country) => {
 
         rows:
             filteredData &&
-            filteredData.map((admin) => ({
+            filteredData.map((el) => ({
                 name: (
                     <MDTypography
                         component="a"
@@ -126,8 +132,8 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                         fontWeight="medium"
                     >
                         <img
-                            src={admin.profile_photo}
-                            alt={admin.profile_photo}
+                            src={el.profile_photo}
+                            alt={el.profile_photo}
                             style={{
                                 width: "50px",
                                 height: "50px",
@@ -135,7 +141,7 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                             }}
                         />
                         <br />
-                        <p className="ps-1">{admin.name}</p>
+                        <p className="ps-1">{el.name}</p>
                     </MDTypography>
                 ),
                 mobile_email: (
@@ -145,9 +151,9 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                         color="text"
                         fontWeight="medium"
                     >
-                        {admin.mobile}
+                        {el.mobile}
                         <br />
-                        {admin.email}
+                        {el.email}
                     </MDTypography>
                 ),
                 gender: (
@@ -157,7 +163,7 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                         color="text"
                         fontWeight="medium"
                     >
-                        {admin.gender}
+                        {el.gender}
                     </MDTypography>
                 ),
                 DOB: (
@@ -167,16 +173,14 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                         color="text"
                         fontWeight="medium"
                     >
-                        {admin.dob}
+                        {el.dob}
                     </MDTypography>
                 ),
                 status: (
                     <MDBox ml={-1}>
                         <MDBadge
-                            badgeContent={admin.status}
-                            color={
-                                admin.status === "active" ? "success" : "error"
-                            }
+                            badgeContent={el.status}
+                            color={el.status === "active" ? "success" : "error"}
                             variant="gradient"
                             size="sm"
                         />
@@ -190,9 +194,9 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                         color="text"
                         fontWeight="medium"
                     >
-                        {admin.city}
+                        {el.city}
                         <br />
-                        {admin.pincode}
+                        {el.pincode}
                     </MDTypography>
                 ),
                 country_state: (
@@ -202,9 +206,9 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                         color="text"
                         fontWeight="medium"
                     >
-                        {admin.country}
+                        {el.country}
                         <br />
-                        {admin.state}
+                        {el.state}
                     </MDTypography>
                 ),
                 register_date: (
@@ -216,15 +220,19 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                     ></MDTypography>
                 ),
                 view: (
-                    <MDTypography
-                        component="a"
-                        href={`/View-user/${admin._id}`}
-                        variant="caption"
-                        color="text"
-                        fontWeight="medium"
+                    <MDButton
+                        color="info"
+                        size="small"
+                        onClick={() => navigate(`view-user/${el._id}`)}
                     >
-                        view
-                    </MDTypography>
+                        <Typography
+                            variant="caption"
+                            color="text"
+                            fontWeight="medium"
+                        >
+                            view
+                        </Typography>
+                    </MDButton>
                 ),
             })),
     };

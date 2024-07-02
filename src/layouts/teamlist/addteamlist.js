@@ -1,4 +1,4 @@
-
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
@@ -19,37 +19,90 @@ import Footer from "examples/Footer";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { BASE_URL } from "BASE_URL";
 // import
 const Addteamlist = () => {
     const [successSB, setSuccessSB] = useState(false);
     const [errorSB, setErrorSB] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [logo, setLogo] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [short_name, setShortName] = useState("");
+    const [team_name, setTeamName] = useState("");
+
+    const navigate = useNavigate();
+
     const openSuccessSB = () => setSuccessSB(true);
     const closeSuccessSB = () => setSuccessSB(false);
     const openErrorSB = () => setErrorSB(true);
     const closeErrorSB = () => setErrorSB(false);
-    const navigate = useNavigate();
+
+    const handleLogoChange = (e) => {
+        const file = e.target.files[0];
+        setLogo(file);
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setSelectedFile(file);
+    };
+
+    const handleSubmit = async () => {
+        if (!logo || !selectedFile || !short_name || !team_name) {
+            setErrorMessage("Please Fill All Fields!");
+            openErrorSB();
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("logo", logo);
+        formData.append("other_photo", selectedFile);
+        formData.append("short_name", short_name);
+        formData.append("team_name", team_name);
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/team/createTeam`, {
+                method: "POST",
+                headers: {
+                    Authorization: localStorage.getItem("token"),
+                    "Access-Control-Allow-Origin": "*",
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Team Add failed");
+            }
+
+            openSuccessSB();
+            setTimeout(() => {
+                navigate(-1);
+            }, 1000);
+        } catch (error) {
+            console.error("Error adding team:", error);
+        }
+    };
+
     const renderSuccessSB = (
         <MDSnackbar
             color="success"
             icon="check"
-            title="Successfull Added"
-            content="Team Is Successfully Added."
-            dateTime="1 sec"
+            title="Successfully Added"
+            content="Team is successfully added."
+            dateTime="1 sec ago"
             open={successSB}
             onClose={closeSuccessSB}
             close={closeSuccessSB}
             bgWhite
         />
     );
- 
+
     const renderErrorSB = (
         <MDSnackbar
             color="error"
             icon="warning"
-            title="Filled Error"
+            title="Error"
             content={errorMessage}
             dateTime="1 sec ago"
             open={errorSB}
@@ -58,87 +111,6 @@ const Addteamlist = () => {
             bgWhite
         />
     );
-
-    const [logo, setlogo] = useState(null)
-    // const [other_photo, setother_photo] = useState(null)
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [short_name, setshort_name] = useState("")
-    const [team_name, setteam_name] = useState("")
-    
-    
-    const handlelogo=(e)=>{
-        const file = e.target.files[0];
-        setlogo(file);
-    }
-   
-    const handleimg = (e) => {
-        const file = e.target.files[0];
-        setSelectedFile(file);
-      };
-    
-    const handleSubmit = async () => {
-       
-        if (!logo && !selectedFile && short_name && team_name ) {
-            setErrorMessage("Please Fill All Fields!")
-            openErrorSB();
-            return
-        }
-        if (!logo) {
-            setErrorMessage("Please Select select-logo!")
-            openErrorSB();
-            return
-        }
-        if (!selectedFile) {
-            setErrorMessage("Please Select select-image!")
-            openErrorSB();
-            return
-        }
-         if (!team_name) {
-            setErrorMessage("Please Enter team_name!")
-            openErrorSB();
-            return
-        }
-        if (!short_name) {
-            setErrorMessage("Please Enter short_name!")
-            openErrorSB();
-            return
-        }
-      
-        
-        const formData = new FormData();
-        formData.append("logo", logo);
-        formData.append("other_photo", selectedFile);
-        formData.append("short_name", short_name);
-        
-        formData.append("team_name", team_name);
-        // formData.append("productprice", productprice);
-      
-        try {
-          const response = await fetch(`${BASE_URL}/api/team/createTeam`, {
-            method: "POST",
-            headers: {
-            //   "Content-Type": "application/json",
-              Authorization: localStorage.getItem("token"),
-              "Access-Control-Allow-Origin": "*",
-            },
-            body: formData,
-          });
-    
-          if (!response.ok) {
-            throw new Error("Team Add  faild`");
-          }
-          console.log(response)
-          openSuccessSB();
-          setTimeout(() => {
-            navigate(-1);
-            
-           
-          }, 1000);
-        } catch (error) {
-          
-        }
-      };
-    
 
     return (
         <DashboardLayout>
@@ -168,71 +140,119 @@ const Addteamlist = () => {
                                 <Grid container pt={4} pb={3} px={3}>
                                     <Grid item xs={12} md={6} xl={6} px={2}>
                                         <MDBox mb={2}>
-                                            <label htmlFor="">Team Logo</label>
+                                            <label htmlFor="team-logo">
+                                                Team Logo
+                                            </label>
                                             <MDInput
+                                                id="team-logo"
                                                 type="file"
-                                                label=""
-                                                name="category"
-                                                // value={logo}
-                                                onChange={handlelogo}
+                                                onChange={handleLogoChange}
                                                 fullWidth
                                                 style={{ marginBottom: "20px" }}
                                             />
+                                            {logo && (
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        logo
+                                                    )}
+                                                    alt="Team Logo Preview"
+                                                    style={{
+                                                        width: "100px",
+                                                        height: "100px",
+                                                        objectFit: "cover",
+                                                        marginTop: "10px",
+                                                    }}
+                                                />
+                                            )}
                                         </MDBox>
                                         <MDBox mb={2}>
-                                            <label htmlFor="">Team Other-Photo</label>
+                                            <label htmlFor="team-other-photo">
+                                                Team Other Photo
+                                            </label>
                                             <MDInput
+                                                id="team-other-photo"
                                                 type="file"
-                                                label=""
-                                                name="category"
-                                                // value={selectedFile}
-                                                onChange={handleimg}
+                                                onChange={handleImageChange}
                                                 fullWidth
                                                 style={{ marginBottom: "20px" }}
                                             />
+                                            {selectedFile && (
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        selectedFile
+                                                    )}
+                                                    alt="Team Other Photo Preview"
+                                                    style={{
+                                                        width: "100px",
+                                                        height: "100px",
+                                                        objectFit: "cover",
+                                                        marginTop: "10px",
+                                                    }}
+                                                />
+                                            )}
                                         </MDBox>
-                                        </Grid>
-                                        <Grid item xs={12} md={6} xl={6} px={2}>
+                                    </Grid>
+                                    <Grid item xs={12} md={6} xl={6} px={2}>
                                         <MDBox mb={2}>
-                                        <label htmlFor="">Team Name</label>
+                                            <label htmlFor="">Team Name</label>
                                             <MDInput
                                                 type="text"
                                                 // label="Team-name"
                                                 onInput={(e) => {
-                                                    let value = e.target.value.replace(/[^ a-z A-Z]/g, ''); // Remove non-numeric characters
+                                                    let value =
+                                                        e.target.value.replace(
+                                                            /[^ a-z A-Z]/g,
+                                                            ""
+                                                        ); // Remove non-numeric characters
                                                     // Check if the first digit is zero
-                                                    if (value.length > 0 && value[0] === ' ') {
-                                                      // If the first digit is zero, remove it
-                                                      value = value.slice(1);
+                                                    if (
+                                                        value.length > 0 &&
+                                                        value[0] === " "
+                                                    ) {
+                                                        // If the first digit is zero, remove it
+                                                        value = value.slice(1);
                                                     }
                                                     // Set the updated value
                                                     e.target.value = value;
-                                                  }}
+                                                }}
                                                 name="category"
                                                 value={team_name}
-                                                onChange={(e)=>setteam_name(e.target.value)}
+                                                onChange={(e) =>
+                                                    setTeamName(e.target.value)
+                                                }
                                                 fullWidth
                                                 style={{ marginBottom: "20px" }}
                                             />
                                         </MDBox>
                                         <MDBox mb={2}>
-                                        <label htmlFor="">Team Short-Name</label>
+                                            <label htmlFor="">
+                                                Team Short-Name
+                                            </label>
                                             <MDInput
                                                 type="text"
                                                 // label="short_nam"
                                                 name="category"
                                                 value={short_name}
                                                 onInput={(e) => {
-                                                    let value = e.target.value.replace(/[^A-Z]/g, ''); // Remove non-numeric characters
+                                                    let value =
+                                                        e.target.value.replace(
+                                                            /[^A-Z]/g,
+                                                            ""
+                                                        ); // Remove non-numeric characters
                                                     // Check if the first digit is zero
-                                                    if (value.length > 0 && value[0] === ' ') {
-                                                      // If the first digit is zero, remove it
-                                                      value = value.slice(1);
+                                                    if (
+                                                        value.length > 0 &&
+                                                        value[0] === " "
+                                                    ) {
+                                                        // If the first digit is zero, remove it
+                                                        value = value.slice(1);
                                                     }
                                                     // Set the updated value
                                                     e.target.value = value;
-                                                  }}
-                                                onChange={(e)=>setshort_name(e.target.value)}
+                                                }}
+                                                onChange={(e) =>
+                                                    setShortName(e.target.value)
+                                                }
                                                 fullWidth
                                                 style={{ marginBottom: "20px" }}
                                             />
