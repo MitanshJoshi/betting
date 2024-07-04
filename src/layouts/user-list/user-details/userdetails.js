@@ -106,7 +106,7 @@ const UserDetails = () => {
                                     sx={{ mx: 0 }}
                                 />
                             </Grid>
-                            {user && user.wallet_details && (
+                            {user.wallet_details[0] && (
                                 <Grid
                                     item
                                     xs={12}
@@ -146,7 +146,7 @@ const UserDetails = () => {
                     </MDBox>
                 )}
 
-                {tabValue === 2 && user.wallet_details && user.transactions && (
+                {tabValue === 2 && user.wallet_details[0] && user.transactions && (
                     <MDBox mt={5} mb={3}>
                         <Transactions
                             funds={user?.wallet_details[0]?.funds || "0"}

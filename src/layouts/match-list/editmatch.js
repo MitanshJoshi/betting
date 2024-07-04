@@ -370,7 +370,7 @@ const Editmatch = () => {
           </Grid>
         </Grid>
       </MDBox>
-      {/* <Footer /> */}
+      <Footer />
     </DashboardLayout>
   );
 };
