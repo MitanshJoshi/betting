@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Divider, Grid, Snackbar } from "@mui/material";
+import { Divider, Grid } from "@mui/material";
 import MDBox from "components/MDBox";
 import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -100,13 +100,14 @@ const UserDetails = () => {
                                         tooltip: "Edit Profile",
                                     }}
                                     shadow={false}
+                                    description=""
                                 />
                                 <Divider
                                     orientation="vertical"
                                     sx={{ mx: 0 }}
                                 />
                             </Grid>
-                            {user.wallet_details[0] && (
+                            {user.wallet_details && user.wallet_details[0] && (
                                 <Grid
                                     item
                                     xs={12}
@@ -133,6 +134,7 @@ const UserDetails = () => {
                                             tooltip: "Edit Profile",
                                         }}
                                         shadow={false}
+                                        description=""
                                     />
                                 </Grid>
                             )}
@@ -146,17 +148,21 @@ const UserDetails = () => {
                     </MDBox>
                 )}
 
-                {tabValue === 2 && user.wallet_details[0] && user.transactions && (
-                    <MDBox mt={5} mb={3}>
-                        <Transactions
-                            funds={user?.wallet_details[0]?.funds || "0"}
-                            fundsUtilized={
-                                user?.wallet_details[0]?.fundsUtilized || "0"
-                            }
-                            transactions={user?.transactions}
-                        />
-                    </MDBox>
-                )}
+                {tabValue === 2 &&
+                    user.wallet_details &&
+                    user.wallet_details[0] &&
+                    user.transactions && (
+                        <MDBox mt={5} mb={3}>
+                            <Transactions
+                                funds={user?.wallet_details[0]?.funds || "0"}
+                                fundsUtilized={
+                                    user?.wallet_details[0]?.fundsUtilized ||
+                                    "0"
+                                }
+                                transactions={user?.transactions}
+                            />
+                        </MDBox>
+                    )}
             </Header>
             <Footer />
         </DashboardLayout>

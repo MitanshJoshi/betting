@@ -490,7 +490,7 @@ const Editplayerlist = () => {
                                                 </Select>
                                             </FormControl>
                                         </MDBox>
-                                        <MDBox mb={2}>
+                                        {/* <MDBox mb={2}>
                                             <label htmlFor="">
                                                 Player Bat-Type
                                             </label>
@@ -553,6 +553,81 @@ const Editplayerlist = () => {
                                                 fullWidth
                                                 style={{ marginBottom: "20px" }}
                                             />
+                                        </MDBox> */}
+                                        <MDBox mb={2}>
+                                            <label htmlFor="">
+                                                Player Bat-Type
+                                            </label>
+                                            <FormControl fullWidth>
+                                                <InputLabel
+                                                    style={{
+                                                        paddingBottom: "10px",
+                                                    }}
+                                                    id="demo-simple-select-label"
+                                                ></InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    onChange={(e) =>
+                                                        setbat(e.target.value)
+                                                    }
+                                                    value={bat_type}
+                                                    // label="Search Bat-type"
+                                                    style={{ height: "43px" }}
+                                                >
+                                                    <MenuItem value=""></MenuItem>
+                                                    <MenuItem
+                                                        width="150px"
+                                                        value="Right hand"
+                                                    >
+                                                        Right hand
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        width="150px"
+                                                        value="Left hand"
+                                                    >
+                                                        Left hand
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <label htmlFor="">
+                                                Player Bow-Type
+                                            </label>
+
+                                            <FormControl fullWidth>
+                                                <InputLabel
+                                                    style={{
+                                                        paddingBottom: "10px",
+                                                    }}
+                                                    id="demo-simple-select-label"
+                                                ></InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    onChange={(e) =>
+                                                        setball(e.target.value)
+                                                    }
+                                                    value={bowl_type}
+                                                    // label="Search Bow-type"
+                                                    style={{ height: "43px" }}
+                                                >
+                                                    <MenuItem value=""></MenuItem>
+                                                    <MenuItem
+                                                        width="150px"
+                                                        value="Right hand"
+                                                    >
+                                                        Right hand
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        width="150px"
+                                                        value="Left hand"
+                                                    >
+                                                        Left hand
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                         <MDBox mt={4} mb={1}>
                                             <MDButton
