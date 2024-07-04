@@ -27,8 +27,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-// import countries from "../../CountryStateCity.json";
-// import
+
 const Addmatch = () => {
     const indiaObject = countries.find((country) => country.name === "India");
     const [successSB, setSuccessSB] = useState(false);
@@ -254,12 +253,12 @@ const Addmatch = () => {
             return;
         }
 
-        if(team_1_id === team_2_id){
-          setErrorMessage("Teams cannot be same!");
+        if (team_1_id === team_2_id) {
+            setErrorMessage("Teams cannot be same!");
             openErrorSB();
             return;
         }
-      
+
         try {
             const response = await fetch(`${BASE_URL}/api/match/insert`, {
                 method: "POST",
@@ -295,7 +294,7 @@ const Addmatch = () => {
             }
         }
     };
-    const [onChange, handleChange] = useState();
+
     return (
         <DashboardLayout>
             <DashboardNavbar />

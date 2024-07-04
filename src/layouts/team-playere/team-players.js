@@ -453,7 +453,6 @@ const PlayerContainer = ({ players, id, title }) => {
 
     const containerStyle = {
         padding: "16px",
-        border: "2px solid #ddd",
         borderRadius: "8px",
         backgroundColor: "#f9f9f9",
         display: "flex",
@@ -461,15 +460,21 @@ const PlayerContainer = ({ players, id, title }) => {
         gap: "15px",
         ...(title === "Available Players" && {
             position: "sticky",
+            border: "2px solid #ddd",
             top: "100px",
             zIndex: 1000,
             backgroundColor: "#f9f9f9", // Ensure the background color covers content behind
+        }),
+        ...(title === "Team Players" && {
+            borderTop: "1px solid #ddd",
         }),
     };
 
     return (
         <MDBox ref={setNodeRef} style={containerStyle}>
-            <Typography variant="h5">{title}</Typography>
+            <MDTypography variant={title === "Team Players" ? "h6" : "h5"}>
+                {title}
+            </MDTypography>
             <div
                 style={{
                     display: "flex",
@@ -562,7 +567,7 @@ const TeamContainer = ({ teamDetail }) => {
             <MDBox
                 display="flex"
                 justifyContent="space-between"
-                border="1px solid #ddd"
+                borderBottom="1px solid #ddd"
                 borderRadius="8px"
                 p={2}
                 bgcolor="#fafafa"
@@ -582,6 +587,13 @@ const TeamContainer = ({ teamDetail }) => {
                         </MDBox>
                     )}
                 </MDBox>
+                <div
+                    style={{
+                        padding: "1px",
+                        backgroundColor: "gray",
+                        borderRadius: "10px",
+                    }}
+                ></div>
                 <MDBox flex={1} ref={setViceCaptainRef}>
                     <MDTypography variant="button">Vice-Captain</MDTypography>
                     {vice_captain ? (
@@ -600,7 +612,7 @@ const TeamContainer = ({ teamDetail }) => {
             <PlayerContainer
                 players={players}
                 id={`${team._id}-players`}
-                title=""
+                title="Team Players"
             />
         </MDBox>
     );
