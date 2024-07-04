@@ -106,6 +106,7 @@ const Viewuser = () => {
             );
             const responseData = await response.json();
             setuser(responseData.data);
+            console.log(responseData)
             if (responseData.data.document_details.length > 0) {
                 setimg(responseData.data.document_details.adhaar_card_photo);
                 setimg2(responseData.data.document_details.pan_card_photo);

@@ -32,6 +32,7 @@ function Playerview() {
             },
           });
           const responseData = await response.json();
+          console.log(responseData)
           seydisplay(responseData.data);
           setimg(responseData.data.player_photo)
         } catch (error) {

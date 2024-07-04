@@ -52,7 +52,8 @@ import Playerlist from "layouts/playerlist";
 import Teamcreate from "layouts/teamlist";
 import Leaguge from "layouts/league-detail";
 import Matchdetail from "layouts/match-list";
-import Teamplayer from "layouts/team-playere";
+// import Teamplayer from "layouts/team-playere";
+import Teamplayer from "layouts/team-playere/team-players";
 import Viewuser from "layouts/user-list/viewuser";
 import Playerview from "layouts/playerlist/viewplayer";
 import Editplayerlist from "layouts/playerlist/editplayerlist";
@@ -85,6 +86,7 @@ import Addwinning from "layouts/contests/addwinning";
 import Winningrange from "layouts/winning-range";
 import Addwinningranges from "layouts/winning-range/addwinningrange";
 import Viewwinning from "layouts/winning-range/viewwinnig";
+import UserDetails from "layouts/user-list/user-details/userdetails";
 
 const routes = [
     {
@@ -129,7 +131,7 @@ const routes = [
     },
     {
         type: "collapse",
-        name: "Team playes",
+        name: "Team player",
         key: "team-player",
         icon: <Icon fontSize="small">people</Icon>,
         route: "/team-player",
@@ -216,20 +218,20 @@ const routes = [
         route: "/change-password",
         component: <Changepassword />,
     },
-    // {
-    //   type: "collapse",
-    //   name: "Profile",
-    //   key: "profile",
-    //   icon: <Icon fontSize="small">person</Icon>,
-    //   route: "/profile",
-    //   component: <Profile />,
-    // },
+    {
+        type: "route",
+        name: "Profile",
+        key: "productdetail",
+        icon: <Icon fontSize="small">person</Icon>,
+        route: "/userlist/view-user/:_id",
+        component: <UserDetails />,
+    },
     {
         type: "routes",
         name: "edit-team",
         key: "productdetail",
         icon: <Icon fontSize="small">people</Icon>,
-        route: "/View-user/:_id",
+        route: "/View-user-details/:_id",
         component: <Viewuser />,
     },
 

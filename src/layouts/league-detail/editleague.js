@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
@@ -19,11 +18,12 @@ import Footer from "examples/Footer";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { BASE_URL } from "BASE_URL";
-// import
-const Editleague = () => {
+import { Input } from "@mui/material";
+import moment from "moment";
 
+const Editleague = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const [successSB, setSuccessSB] = useState(false);
@@ -64,23 +64,25 @@ const Editleague = () => {
 
     const { _id } = useParams();
 
-    const [league_name, setleaguename] = useState("")
-    const [end_date, setenddate] = useState("")
-    const [start_date, setstartdate] = useState("")
+    const [league_name, setleaguename] = useState("");
+    const [end_date, setenddate] = useState("");
+    const [start_date, setstartdate] = useState("");
+
+    console.log(end_date)
 
     const handleChange = (e) => {
-        setleaguename(e.target.value)
-    }
+        setleaguename(e.target.value);
+    };
 
     const handleenddate = (e) => {
-        setenddate(e.target.value)
-    }
+        setenddate(e.target.value);
+    };
     const handlestartdate = (e) => {
-        setstartdate(e.target.value)
-    }
+        setstartdate(e.target.value);
+    };
 
     // const handleSubmit = async () => {
-       
+
     //     const token = `Bearer ${localStorage.getItem("token")}`;
     //     const response = await fetch(`${BASE_URL}/api/league/insertLeague`, {
     //         method: "POST",
@@ -102,90 +104,89 @@ const Editleague = () => {
 
     // }
     const handleSubmit = async () => {
-        if (!league_name && !end_date && start_date ) {
-            setErrorMessage("Please Fill All Fields!")
+        if (!league_name && !end_date && start_date) {
+            setErrorMessage("Please Fill All Fields!");
             openErrorSB();
-            return
+            return;
         }
         if (!league_name) {
-            setErrorMessage("Please Select League-Name!")
+            setErrorMessage("Please Select League-Name!");
             openErrorSB();
-            return
+            return;
         }
         if (!start_date) {
-            setErrorMessage("Please Enter League-StartDate!")
+            setErrorMessage("Please Enter League-StartDate!");
             openErrorSB();
-            return
+            return;
         }
         if (!end_date) {
-            setErrorMessage("Please Enter League-EndDate!")
+            setErrorMessage("Please Enter League-EndDate!");
             openErrorSB();
-            return
+            return;
         }
-       
 
         try {
-          const response = await fetch(
-            `${BASE_URL}/api/league/update?leagueId=${_id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                // "Access-Control-Allow-Origin": "*",
-                Authorization: localStorage.getItem("token"),
-              },
-              body: JSON.stringify({
-                league_name,
-                end_date,
-                start_date
-                
-              }),
+            const response = await fetch(
+                `${BASE_URL}/api/league/update?leagueId=${_id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        // "Access-Control-Allow-Origin": "*",
+                        Authorization: localStorage.getItem("token"),
+                    },
+                    body: JSON.stringify({
+                        league_name,
+                        end_date,
+                        start_date,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Chat inquiry failed");
             }
-          );
-
-          
-          if (!response.ok) {
-            throw new Error("Chat inquiry failed");
-          }
             openSuccessSB();
-        setTimeout(() => {
-            navigate(-1)
-        }, 2000);
+            setTimeout(() => {
+                navigate(-1);
+            }, 2000);
         } catch (error) {
-          if (error) {
-           console.log("hello")
-            };
-          }
+            if (error) {
+                console.log("hello");
+            }
         }
+    };
 
-    
-        const fetchData = async () => {
-            try {
-              const token = localStorage.getItem("token");
-              console.log(token)
-              const response = await fetch(`${BASE_URL}/api/league/displayList`, {
+    const fetchData = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            console.log(token);
+            const response = await fetch(`${BASE_URL}/api/league/displayList`, {
                 method: "GET",
                 headers: {
-                  Authorization: token,
+                    Authorization: token,
                 },
-              });
-              const responseData = await response.json();
+            });
+            const responseData = await response.json();
             //   setleague(responseData.data);??
-              console.log(responseData.data)
-              const leaguedata=responseData.data.find(item=>item._id===_id)
-              if(leaguedata){
-                setleaguename(leaguedata.league_name)
-                setenddate(leaguedata.end_date)
-                setstartdate(leaguedata.start_date)
-              }
-            } catch (error) {
-              console.error("Error fetching data from the backend", error);
+            //   console.log(responseData.data)
+            const leaguedata = responseData.data.find(
+                (item) => item._id === _id
+            );
+            if (leaguedata) {
+                console.log(leaguedata);
+                setleaguename(leaguedata.league_name);
+                setenddate(moment(leaguedata.end_date).format("YYYY-MM-DD"));
+                setstartdate(moment(leaguedata.start_date).format("YYYY-MM-DD"));
             }
-          };
-        
-          useEffect(() => {
-            fetchData();
-          }, []);
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <DashboardLayout>
@@ -215,19 +216,28 @@ const Editleague = () => {
                                 <Grid container pt={4} pb={3} px={3}>
                                     <Grid item xs={12} md={6} xl={6} px={2}>
                                         <MDBox mb={2}>
-                                            <label htmlFor="">League-Name</label>
-                                        <MDInput
+                                            <label htmlFor="">
+                                                League-Name
+                                            </label>
+                                            <MDInput
                                                 type="text"
                                                 onInput={(e) => {
-                                                    let value = e.target.value.replace(/[^a-z A-Z]/g, ''); // Remove non-numeric characters
+                                                    let value =
+                                                        e.target.value.replace(
+                                                            /[^a-z A-Z]/g,
+                                                            ""
+                                                        ); // Remove non-numeric characters
                                                     // Check if the first digit is zero
-                                                    if (value.length > 0 && value[0] === ' ') {
-                                                      // If the first digit is zero, remove it
-                                                      value = value.slice(1);
+                                                    if (
+                                                        value.length > 0 &&
+                                                        value[0] === " "
+                                                    ) {
+                                                        // If the first digit is zero, remove it
+                                                        value = value.slice(1);
                                                     }
                                                     // Set the updated value
                                                     e.target.value = value;
-                                                  }}
+                                                }}
                                                 name="league_name"
                                                 value={league_name}
                                                 onChange={handleChange}
@@ -236,11 +246,11 @@ const Editleague = () => {
                                             />
                                         </MDBox>
                                         <MDBox mb={2}>
-                                        <label htmlFor="">League-StarDate</label>
-                                            <MDInput
+                                            <label htmlFor="">
+                                                League-StarDate
+                                            </label>
+                                            <Input
                                                 type="date"
-                                                // label=""
-                                                name="start_date"
                                                 value={start_date}
                                                 onChange={handlestartdate}
                                                 fullWidth
@@ -248,11 +258,11 @@ const Editleague = () => {
                                             />
                                         </MDBox>
                                         <MDBox mb={2}>
-                                        <label htmlFor="">League-EndDate</label>
-                                            <MDInput
+                                            <label htmlFor="">
+                                                League-EndDate
+                                            </label>
+                                            <Input
                                                 type="date"
-                                                // label=""
-                                                name="end_date"
                                                 value={end_date}
                                                 onChange={handleenddate}
                                                 fullWidth
