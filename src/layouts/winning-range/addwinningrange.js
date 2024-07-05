@@ -30,13 +30,81 @@ const Addwinningranges = () => {
     const [pricePercentage, setPricePercent] = useState("");
     const [contestid, setContestId] = useState("");
     const [display, setDisplay] = useState("");
-    const [contest, setContest] = useState([]);
+    // const [contest, setContest] = useState([]);
 
     const openSuccessSB = () => setSuccessSB(true);
     const closeSuccessSB = () => setSuccessSB(false);
     const openErrorSB = () => setErrorSB(true);
     const closeErrorSB = () => setErrorSB(false);
     const navigate = useNavigate();
+
+    const [matches, setMatches] = useState([]);
+    const [league_id, setLeague_id] = useState("");
+    const [Leagues, setLeagues] = useState([]);
+    const [match_id, setMatchId] = useState("");
+    const [contest, setContest] = useState([]);
+
+    const fetchLeagues = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            console.log(token);
+            const response = await fetch(`${BASE_URL}/api/league/displayList`, {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+            const responseData = await response.json();
+            setLeagues(responseData.data);
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    const fetchMatches = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(
+                `${BASE_URL}/api/match/displayList?leagueId=${id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+            const responseData = await response.json();
+            setMatches(responseData?.data);
+            console.log(responseData);
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    const fetchContests = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(
+                `${BASE_URL}/api/match/displaycontestList?matchId=${id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+            const responseData = await response.json();
+            setContest(responseData?.data[0].contests);
+            console.log(responseData?.data[0].contests);
+            // console.log(responseData);
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchLeagues();
+    }, []);
 
     const handlePriceChange = (e) => {
         const value = parseFloat(e.target.value); // Convert input value to a number
@@ -130,29 +198,6 @@ const Addwinningranges = () => {
         }
     };
 
-    const fetchData = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch(
-                `${BASE_URL}/api/contest/displayList`,
-                {
-                    method: "GET",
-                    headers: {
-                        Authorization: token,
-                    },
-                }
-            );
-            const responseData = await response.json();
-            setContest(responseData.data);
-        } catch (error) {
-            console.error("Error fetching data from the backend", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
     const handleSubmit = async () => {
         if (!contestid || !rank.length || !price) {
             setErrorMessage("Please fill all fields!");
@@ -188,6 +233,7 @@ const Addwinningranges = () => {
             openErrorSB();
         }
     };
+
     const handleRemove = (index) => {
         const newDataArray = dataArray.filter((_, i) => i !== index);
         setDataArray(newDataArray);
@@ -253,9 +299,9 @@ const Addwinningranges = () => {
         setMaxrange(totalEntry);
     };
 
-    const [displaye, setdisplay] = useState("");
+    // const [displaye, setdisplay] = useState("");
 
-    const fetchDataa = async () => {
+    const fetchData = async () => {
         try {
             const token = localStorage.getItem("token");
             const response = await fetch(
@@ -268,7 +314,8 @@ const Addwinningranges = () => {
                 }
             );
             const responseData = await response.json();
-            setdisplay(responseData.data);
+            console.log(responseData);
+            // setdisplay(responseData.data);
             setEntryFees(responseData.data.entry_fees);
             setTotalEntry(responseData.data.total_participant);
             setProfitPercent(responseData.data.profit);
@@ -295,46 +342,140 @@ const Addwinningranges = () => {
     };
 
     useEffect(() => {
-        fetchDataa();
+        fetchData();
     }, [contestid]);
 
     return (
         <DashboardLayout>
             <MDBox pt={6} pb={3}>
                 {!contestid && (
-                    <MDBox mb={2}>
-                        <label htmlFor="" style={{ fontWeight: "200" }}>
-                            Select Contest
-                        </label>
-                        <FormControl fullWidth>
-                            <InputLabel
-                                style={{ paddingBottom: "10px" }}
-                                id="demo-simple-select-label"
-                            ></InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                onChange={(e) => setContestId(e.target.value)}
-                                value={contestid}
-                                style={{ padding: "10px 0px" }}
-                            >
-                                <MenuItem
-                                    value=""
-                                    style={{ fontWeight: "200" }}
-                                >
-                                    Select
-                                </MenuItem>
-                                {contest &&
-                                    contest.map((e) => (
-                                        <MenuItem key={e._id} value={e._id}>
-                                            {
-                                                e?.contestTypeData?.[0]
-                                                    ?.contest_type
-                                            }
-                                        </MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
+                    <MDBox py={3} px={2}>
+                        <Grid container pt={4} pb={3} px={3}>
+                            <Grid item xs={12} md={6} xl={6} px={2}>
+                                <MDBox mb={2}>
+                                    <label htmlFor="match-name">
+                                        League Name
+                                    </label>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            onChange={(e) => {
+                                                setMatches([]);
+                                                setLeague_id(e.target.value);
+                                                fetchMatches(e.target.value);
+                                            }}
+                                            value={league_id}
+                                            // label="Select Team1"
+                                            style={{
+                                                padding: "10px 0px",
+                                            }}
+                                        >
+                                            <MenuItem
+                                                value=""
+                                                style={{
+                                                    fontWeight: "200",
+                                                }}
+                                            >
+                                                Select
+                                            </MenuItem>
+                                            {Leagues &&
+                                                Leagues.map((e) => (
+                                                    <MenuItem value={e._id}>
+                                                        {e.league_name}
+                                                    </MenuItem>
+                                                ))}
+                                        </Select>
+                                    </FormControl>
+                                </MDBox>
+                                {league_id && (
+                                    <MDBox mb={2}>
+                                        <label htmlFor="match-name">
+                                            Match Name
+                                        </label>
+                                        <FormControl fullWidth>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                onChange={(e) => {
+                                                    setMatchId(e.target.value);
+                                                    fetchContests(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                value={match_id}
+                                                // label="Select Team1"
+                                                style={{
+                                                    padding: "10px 0px",
+                                                }}
+                                            >
+                                                <MenuItem
+                                                    value=""
+                                                    style={{
+                                                        fontWeight: "200",
+                                                    }}
+                                                >
+                                                    Select
+                                                </MenuItem>
+                                                {matches?.map((e) => (
+                                                    <MenuItem
+                                                        key={e._id}
+                                                        value={e._id}
+                                                    >
+                                                        {e.match_name}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </MDBox>
+                                )}
+                                {match_id && (
+                                    <MDBox mb={2}>
+                                        <label htmlFor="contest-name">
+                                            Contest Name
+                                        </label>
+                                        <FormControl fullWidth>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                onChange={(e) =>
+                                                    setContestId(e.target.value)
+                                                }
+                                                // value={contest_type_id}
+                                                // label="Select Team1"
+                                                style={{
+                                                    padding: "10px 0px",
+                                                }}
+                                            >
+                                                <MenuItem
+                                                    value=""
+                                                    style={{
+                                                        fontWeight: "200",
+                                                    }}
+                                                >
+                                                    Select
+                                                </MenuItem>
+                                                {contest[0] &&
+                                                    contest.map((e) => (
+                                                        <MenuItem
+                                                            key={
+                                                                e?.contest_type
+                                                                    ?._id
+                                                            }
+                                                            value={e?._id}
+                                                        >
+                                                            {
+                                                                e.contest_type
+                                                                    ?.contest_type
+                                                            }
+                                                        </MenuItem>
+                                                    ))}
+                                            </Select>
+                                        </FormControl>
+                                    </MDBox>
+                                )}
+                            </Grid>
+                        </Grid>
                     </MDBox>
                 )}
                 {contestid && (
@@ -412,7 +553,6 @@ const Addwinningranges = () => {
                                                                     <th>
                                                                         Action
                                                                     </th>{" "}
-                                                                    {/* New column for Remove button */}
                                                                 </tr>
                                                             </thead>
                                                             <tbody>

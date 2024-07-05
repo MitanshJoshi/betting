@@ -84,7 +84,8 @@ import Addwinningrange from "layouts/winningpricerange/addwinningrange";
 import Editwinnigrange from "layouts/winningpricerange/editwinnigrange";
 import Addwinning from "layouts/contests/addwinning";
 import Winningrange from "layouts/winning-range";
-import Addwinningranges from "layouts/winning-range/addwinningrange";
+// import Addwinningranges from "layouts/winning-range/addwinningrange";
+import Addwinningranges from "layouts/winning-range/addrange";
 import Viewwinning from "layouts/winning-range/viewwinnig";
 import UserDetails from "layouts/user-list/user-details/userdetails";
 
@@ -177,14 +178,14 @@ const routes = [
         route: "/contest-type",
         component: <Conteststype />,
     },
-    {
-        type: "collapse",
-        name: "Winning Price",
-        key: "winning-price",
-        icon: <Icon fontSize="small">people</Icon>,
-        route: "/winning-price",
-        component: <Winningprice />,
-    },
+    // {
+    //     type: "collapse",
+    //     name: "Winning Price",
+    //     key: "winning-price",
+    //     icon: <Icon fontSize="small">people</Icon>,
+    //     route: "/winning-price",
+    //     component: <Winningprice />,
+    // },
     // {
     //   type: "collapse",
     //   name: "Winning Pricerange",

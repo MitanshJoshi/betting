@@ -20,7 +20,13 @@ import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "BASE_URL";
-import { MDSelect } from "@mui/material";
+import {
+    FormControl,
+    InputLabel,
+    MDSelect,
+    MenuItem,
+    Select,
+} from "@mui/material";
 
 const Addcontests = () => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -69,7 +75,6 @@ const Addcontests = () => {
     const [total_entry, setTotal] = useState("");
     const [max_team_per_user, setMax] = useState("");
     const [profit, setProfit] = useState("");
-    const [Team, setTeam] = useState([]);
     const [Display, setDisplay] = useState([]);
     const [Leagues, setLeagues] = useState([]);
     const [matches, setMatches] = useState([]);
@@ -248,101 +253,123 @@ const Addcontests = () => {
                                             <label htmlFor="match-name">
                                                 League Name
                                             </label>
-                                            <select
-                                                onChange={(e) => {
-                                                    setMatches([]);
-                                                    setLeague_id(
-                                                        e.target.value
-                                                    );
-                                                    fetchMatches(
-                                                        e.target.value
-                                                    );
-                                                }}
-                                                fullWidth
-                                                style={{
-                                                    marginBottom: "20px",
-                                                    width: "400px",
-                                                    height: "40px",
-                                                }}
-                                            >
-                                                <option
-                                                    value=""
-                                                    onSelect={() => {
-                                                        setLeagues([]);
-                                                        setLeague_id("");
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    onChange={(e) => {
+                                                        setMatches([]);
+                                                        setLeague_id(
+                                                            e.target.value
+                                                        );
+                                                        fetchMatches(
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                    value={league_id}
+                                                    // label="Select Team1"
+                                                    style={{
+                                                        padding: "10px 0px",
                                                     }}
                                                 >
-                                                    Select
-                                                </option>
-                                                {Leagues?.map((e) => (
-                                                    <option
-                                                        key={e._id}
-                                                        value={e._id}
+                                                    <MenuItem
+                                                        value=""
+                                                        style={{
+                                                            fontWeight: "200",
+                                                        }}
                                                     >
-                                                        {e.league_name}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                                        Select
+                                                    </MenuItem>
+                                                    {Leagues &&
+                                                        Leagues.map((e) => (
+                                                            <MenuItem
+                                                                value={e._id}
+                                                            >
+                                                                {e.league_name}
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                         {league_id && (
                                             <MDBox mb={2}>
                                                 <label htmlFor="match-name">
                                                     Match Name
                                                 </label>
-                                                <select
-                                                    onChange={(e) =>
-                                                        setMatchId(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    fullWidth
-                                                    style={{
-                                                        marginBottom: "20px",
-                                                        width: "400px",
-                                                        height: "40px",
-                                                    }}
-                                                >
-                                                    <option value="">
-                                                        Select
-                                                    </option>
-                                                    {matches?.map((e) => (
-                                                        <option
-                                                            key={e._id}
-                                                            value={e._id}
+                                                <FormControl fullWidth>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        onChange={(e) =>
+                                                            setMatchId(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        value={match_id}
+                                                        // label="Select Team1"
+                                                        style={{
+                                                            padding: "10px 0px",
+                                                        }}
+                                                    >
+                                                        <MenuItem
+                                                            value=""
+                                                            style={{
+                                                                fontWeight:
+                                                                    "200",
+                                                            }}
                                                         >
-                                                            {e.match_name}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                            Select
+                                                        </MenuItem>
+                                                        {matches?.map((e) => (
+                                                            <MenuItem
+                                                                key={e._id}
+                                                                value={e._id}
+                                                            >
+                                                                {e.match_name}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
                                             </MDBox>
                                         )}
                                         <MDBox mb={2}>
                                             <label htmlFor="contest-name">
                                                 Contest Name
                                             </label>
-                                            <select
-                                                value={contest_type_id}
-                                                onChange={(e) =>
-                                                    setContestId(e.target.value)
-                                                }
-                                                fullWidth
-                                                style={{
-                                                    marginBottom: "20px",
-                                                    width: "400px",
-                                                    height: "40px",
-                                                }}
-                                            >
-                                                <option value="">Select</option>
-                                                {Display &&
-                                                    Display.map((e) => (
-                                                        <option
-                                                            key={e._id}
-                                                            value={e._id}
-                                                        >
-                                                            {e.contest_type}
-                                                        </option>
-                                                    ))}
-                                            </select>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    onChange={(e) =>
+                                                        setContestId(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    value={contest_type_id}
+                                                    // label="Select Team1"
+                                                    style={{
+                                                        padding: "10px 0px",
+                                                    }}
+                                                >
+                                                    <MenuItem
+                                                        value=""
+                                                        style={{
+                                                            fontWeight: "200",
+                                                        }}
+                                                    >
+                                                        Select
+                                                    </MenuItem>
+                                                    {Display &&
+                                                        Display.map((e) => (
+                                                            <MenuItem
+                                                                key={e._id}
+                                                                value={e._id}
+                                                            >
+                                                                {e.contest_type}
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                         <MDBox mb={1}>
                                             <label htmlFor="price-pool">

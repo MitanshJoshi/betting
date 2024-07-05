@@ -40,7 +40,14 @@ import backgroundImage from "assets/images/bg-profile.jpeg";
 import MDButton from "components/MDButton";
 import tab from "assets/theme/components/tabs/tab";
 
-function Header({ children, status, profile_image, tabValue, setTabValue }) {
+function Header({
+    children,
+    status,
+    profile_image,
+    tabValue,
+    setTabValue,
+    name,
+}) {
     const [tabsOrientation, setTabsOrientation] = useState("horizontal");
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -120,7 +127,7 @@ function Header({ children, status, profile_image, tabValue, setTabValue }) {
                         >
                             <MDBox>
                                 <MDTypography variant="h5" fontWeight="medium">
-                                    User Profile
+                                    {name}
                                 </MDTypography>
                             </MDBox>
                             <MDBox
