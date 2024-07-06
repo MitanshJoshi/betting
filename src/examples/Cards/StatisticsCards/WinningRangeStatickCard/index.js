@@ -26,7 +26,6 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
 function ComplexStatisticsCard({title, totalPaticipants,entryfess,totalAmount,profit,afterprofit}) {
-  console.log(totalPaticipants);
   return (
     <Card>
       <MDBox display="flex" justifyContent="center" pt={1} px={2}>

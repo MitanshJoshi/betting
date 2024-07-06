@@ -161,52 +161,6 @@ const Addwinningranges = () => {
         }
     };
 
-    const handleSubmit = async () => {
-        if (!contestid || !rank.length || !price || !pricePercentage) {
-            setErrorMessage("Please fill all fields!");
-            openErrorSB();
-            return;
-        }
-
-        const ranksArray = rank.split("-").map((r) => parseInt(r.trim()));
-        const totalNumbersInRank = ranksArray[1] - ranksArray[0] + 1;
-        const totalWinningPrice = price * totalNumbersInRank;
-
-        if (totalWinningPrice > remaining) {
-            setErrorMessage("Total winning price exceeds remaining value!");
-            openErrorSB();
-            return;
-        }
-
-        try {
-            const response = await fetch(
-                `${BASE_URL}/api/contestDetails/insert`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        Authorization: localStorage.getItem("token"),
-                    },
-                    body: JSON.stringify({
-                        contest_id: contestid,
-                        rankes: dataArray,
-                    }),
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Contest creation failed");
-            }
-            openSuccessSB();
-            displayData();
-        } catch (error) {
-            console.error("Error:", error);
-            setErrorMessage(error.message);
-            openErrorSB();
-        }
-    };
-
     const fetchData = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -333,12 +287,90 @@ const Addwinningranges = () => {
         setPrice(0);
     };
 
-    // TODO: complete this function
     const handleRemove = (index) => {
+        let amount = 0;
+        for (let i = index; i < dataArray.length; i++) {
+            amount += dataArray[i].winningPrice;
+        }
         const newDataArray = dataArray.filter((_, i) => i < index);
         setDataArray(newDataArray);
-        setMinrange(newDataArray[newDataArray.length - 1].ranks[0] + 1);
+        if (index === 0) {
+            setMinrange(1);
+            setRank(`${1} - ${totalEntry}`);
+        } else {
+            setMinrange(newDataArray[newDataArray.length - 1].ranks[1] + 1);
+            setRank(
+                `${
+                    newDataArray[newDataArray.length - 1].ranks[1] + 1
+                } - ${totalEntry}`
+            );
+        }
         setMaxrange(totalEntry);
+        setremaining(remaining + amount);
+    };
+
+    const handleSubmit = async () => {
+        // if (!contestid || !rank.length || !price || !pricePercentage) {
+        //     setErrorMessage("Please fill all fields!");
+        //     openErrorSB();
+        //     return;
+        // }
+
+        const ranksArray = rank.split("-").map((r) => parseInt(r.trim()));
+        const totalNumbersInRank = ranksArray[1] - ranksArray[0] + 1;
+        const totalWinningPrice = price * totalNumbersInRank;
+
+        if (totalWinningPrice > remaining) {
+            setErrorMessage("Total winning price exceeds remaining value!");
+            openErrorSB();
+            return;
+        }
+
+        const dataToSend = dataArray.map((el) => {
+            let range = [];
+            if (el.ranks[0] === el.ranks[1]) {
+                range.push(el.ranks[0]);
+            } else {
+                for (let i = el.ranks[0]; i <= el.ranks[1]; i++) {
+                    range.push(i);
+                }
+            }
+            return {
+                range: range,
+                price: el.winningPrice,
+                percent: Number(el.winningPercentage),
+            };
+        });
+
+        console.log(dataToSend)
+
+        try {
+            const response = await fetch(
+                `${BASE_URL}/api/contestDetails/insert`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        Authorization: localStorage.getItem("token"),
+                    },
+                    body: JSON.stringify({
+                        contest_id: contestid,
+                        rankes: dataToSend,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Contest creation failed");
+            }
+            openSuccessSB();
+            displayData();
+        } catch (error) {
+            console.error("Error:", error);
+            setErrorMessage(error.message);
+            openErrorSB();
+        }
     };
 
     return (
