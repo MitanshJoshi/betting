@@ -267,6 +267,7 @@ const Teamplayer = () => {
     };
 
     const handleSave = async () => {
+        setLoading(true);
         const dataToSend = teamPlayerDetails.map((el) => ({
             team_id: el.team._id,
             players: el.players.map((x) => x._id),
@@ -299,6 +300,8 @@ const Teamplayer = () => {
             console.error("Save operation failed", error);
             setSnackbarMessage("Save operation failed.");
             setSnackbarOpen(true);
+        } finally {
+            setLoading(false);
         }
     };
 
