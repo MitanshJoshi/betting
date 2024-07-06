@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import { useMaterialUIController } from "context";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
@@ -270,7 +268,7 @@ const Addwinningranges = () => {
         const data = {
             ranks: [minRange, maxRange],
             winningPrice: price * (maxRange - minRange + 1),
-            winningPercentage: pricePercentage,
+            winningPercentage: Number(pricePercentage),
         };
         setDataArray([...dataArray, data]);
         setremaining(remaining - price * (maxRange - minRange + 1));
@@ -316,11 +314,7 @@ const Addwinningranges = () => {
         //     return;
         // }
 
-        const ranksArray = rank.split("-").map((r) => parseInt(r.trim()));
-        const totalNumbersInRank = ranksArray[1] - ranksArray[0] + 1;
-        const totalWinningPrice = price * totalNumbersInRank;
-
-        if (totalWinningPrice > remaining) {
+        if (remaining < 0) {
             setErrorMessage("Total winning price exceeds remaining value!");
             openErrorSB();
             return;
@@ -342,7 +336,7 @@ const Addwinningranges = () => {
             };
         });
 
-        console.log(dataToSend)
+        console.log(dataToSend);
 
         try {
             const response = await fetch(
@@ -371,6 +365,24 @@ const Addwinningranges = () => {
             setErrorMessage(error.message);
             openErrorSB();
         }
+    };
+
+    const handleFormInputChange = (event, index, users) => {
+        const updatedState = [...dataArray];
+        const totalAmount = event.target.value * users;
+        const calculatedPercentage =
+            ((event.target.value * users) / after) * 100;
+        updatedState[index] = {
+            ...updatedState[index],
+            winningPrice: totalAmount,
+            winningPercentage: Number(calculatedPercentage.toFixed(2)),
+        };
+        let updatedAmount = 0;
+        for (let i = 0; i < updatedState.length; i++) {
+            updatedAmount += updatedState[i].winningPrice;
+        }
+        setremaining(after - updatedAmount);
+        setDataArray(updatedState);
     };
 
     return (
@@ -560,14 +572,14 @@ const Addwinningranges = () => {
                                             </MDBox>
                                         </Grid>
                                     </Grid>
-                                    <Grid container spacing={12} mb={5} px={10}>
+                                    <Grid container spacing={12} mb={5} px={1}>
                                         <Grid item xs={6} md={6} lg={6}>
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Rank</th>
                                                         <th>Winning Price</th>
-                                                        <th>Action</th>{" "}
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -577,9 +589,53 @@ const Addwinningranges = () => {
                                                                 <tr key={index}>
                                                                     <td>{`${e?.ranks?.[0]} - ${e?.ranks?.[1]}`}</td>
                                                                     <td>
-                                                                        {
+                                                                        <MDInput
+                                                                            onInput={(
+                                                                                e
+                                                                            ) =>
+                                                                                (e.target.value =
+                                                                                    e.target.value.replace(
+                                                                                        /[^0-9]/g,
+                                                                                        ""
+                                                                                    ))
+                                                                            }
+                                                                            type="number"
+                                                                            value={
+                                                                                e.winningPrice /
+                                                                                (e
+                                                                                    .ranks[1] -
+                                                                                    e
+                                                                                        .ranks[0] +
+                                                                                    1)
+                                                                            }
+                                                                            onChange={(
+                                                                                event
+                                                                            ) => {
+                                                                                const users =
+                                                                                    e
+                                                                                        .ranks[1] -
+                                                                                    e
+                                                                                        .ranks[0] +
+                                                                                    1;
+                                                                                handleFormInputChange(
+                                                                                    event,
+                                                                                    index,
+                                                                                    users
+                                                                                );
+                                                                            }}
+                                                                            sx={{
+                                                                                width: "100px",
+                                                                            }}
+                                                                        />
+                                                                        {` X ${
+                                                                            e
+                                                                                .ranks[1] -
+                                                                            e
+                                                                                .ranks[0] +
+                                                                            1
+                                                                        } = ${
                                                                             e?.winningPrice
-                                                                        }
+                                                                        }`}
                                                                     </td>
                                                                     <td>
                                                                         <button

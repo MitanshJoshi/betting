@@ -86,6 +86,7 @@ import Addwinning from "layouts/contests/addwinning";
 import Winningrange from "layouts/winning-range";
 // import Addwinningranges from "layouts/winning-range/addwinningrange";
 import Addwinningranges from "layouts/winning-range/addrange";
+import Editwinningranges from "layouts/winning-range/editrange";
 import Viewwinning from "layouts/winning-range/viewwinnig";
 import UserDetails from "layouts/user-list/user-details/userdetails";
 
@@ -451,7 +452,7 @@ const routes = [
         key: "edit-winningrange",
         icon: <Icon fontSize="small">add_box</Icon>,
         route: "/edit-winningrange/:_id",
-        component: <Editwinnigrange />,
+        component: <Editwinningranges />,
     },
     {
         type: "routes",

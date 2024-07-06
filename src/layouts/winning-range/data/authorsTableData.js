@@ -37,6 +37,8 @@ export default function AuthorsTableData({ handleDelete, Display }) {
         console.log("Deleting object with id:", id);
     };
 
+    console.log(Display);
+
     return {
         columns: [
             {
@@ -87,11 +89,14 @@ export default function AuthorsTableData({ handleDelete, Display }) {
                         {/* {`${e.rankes[0].range[0]} - ${
                             e.rankes[e.rankes.length - 1].range[0]
                         }`} */}
-                        {
-                          e.rankes.map(rank=>(
-                            `${rank.range[0]} - ${rank.range[rank.range.length-1]}`
-                          )).join(" , ")
-                        }
+                        {e.rankes
+                            .map(
+                                (rank) =>
+                                    `${rank.range[0]} - ${
+                                        rank.range[rank.range.length - 1]
+                                    }`
+                            )
+                            .join(" , ")}
                     </MDTypography>
                 ),
                 winningprice: (
@@ -137,7 +142,7 @@ export default function AuthorsTableData({ handleDelete, Display }) {
                 action: (
                     <MDTypography
                         component="a"
-                        href={`/edit-winningprice/${e._id}`}
+                        href={`/edit-winningrange/${e._id}`}
                         variant="caption"
                         color="text"
                         fontWeight="medium"
