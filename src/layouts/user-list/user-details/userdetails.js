@@ -64,6 +64,7 @@ const UserDetails = () => {
                 profile_image={user.profile_photo || ""}
                 tabValue={tabValue}
                 setTabValue={setTabValue}
+                name={user?.name || ""}
             >
                 {tabValue === 0 && (
                     <MDBox mt={5} mb={3}>

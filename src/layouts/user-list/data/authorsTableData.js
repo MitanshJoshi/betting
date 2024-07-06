@@ -220,19 +220,24 @@ const Data = (searchTerm, contact, email, state, city, country) => {
                     ></MDTypography>
                 ),
                 view: (
-                    <MDButton
-                        color="info"
-                        size="small"
-                        onClick={() => navigate(`view-user/${el._id}`)}
+                    // <link href={`userlist/view-user/${el._id}`} content="adsad" />
+                    // <Typography
+                    //     variant="caption"
+                    //     color="text"
+                    //     fontWeight="medium"
+                    // >
+                    //     view
+                    // </Typography>
+                    // </link>
+                    <MDTypography
+                        component="a"
+                        variant="caption"
+                        color="text"
+                        fontWeight="medium"
+                        href={`userlist/view-user/${el._id}`}
                     >
-                        <Typography
-                            variant="caption"
-                            color="text"
-                            fontWeight="medium"
-                        >
-                            view
-                        </Typography>
-                    </MDButton>
+                        VIEW
+                    </MDTypography>
                 ),
             })),
     };
