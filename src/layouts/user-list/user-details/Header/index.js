@@ -105,7 +105,7 @@ function Header({
                     px: 2,
                 }}
             >
-                <Grid container spacing={3} alignItems="center">
+                <Grid container spacing={3}>
                     <Grid item>
                         <MDAvatar
                             src={profile_image}
@@ -114,7 +114,7 @@ function Header({
                             shadow="sm"
                         />
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12} md={4}>
                         <MDBox
                             height="100%"
                             mt={0.5}
@@ -140,6 +140,7 @@ function Header({
                                     paddingRight: "15px",
                                     paddingVertical: "5px",
                                     borderRadius: "10px",
+                                    width:"fit-content"
                                 }}
                             >
                                 <MDTypography
@@ -152,7 +153,7 @@ function Header({
                             </MDBox>
                         </MDBox>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
+                    <Grid item xs={12} md={8}>
                         <AppBar position="static">
                             <Tabs
                                 orientation={tabsOrientation}
@@ -192,6 +193,17 @@ function Header({
                                             sx={{ mt: -0.25 }}
                                         >
                                             wallet
+                                        </Icon>
+                                    }
+                                />
+                                <Tab
+                                    label="Teams"
+                                    icon={
+                                        <Icon
+                                            fontSize="small"
+                                            sx={{ mt: -0.25 }}
+                                        >
+                                            people
                                         </Icon>
                                     }
                                 />

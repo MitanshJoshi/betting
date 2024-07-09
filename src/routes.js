@@ -89,6 +89,7 @@ import Addwinningranges from "layouts/winning-range/addrange";
 import Editwinningranges from "layouts/winning-range/editrange";
 import Viewwinning from "layouts/winning-range/viewwinnig";
 import UserDetails from "layouts/user-list/user-details/userdetails";
+import UserTeamDetails from "layouts/user-list/user-details/user-team-details"
 
 const routes = [
     {
@@ -221,12 +222,20 @@ const routes = [
         component: <Changepassword />,
     },
     {
-        type: "route",
+        type: "routes",
         name: "Profile",
         key: "productdetail",
         icon: <Icon fontSize="small">person</Icon>,
         route: "/userlist/view-user/:_id",
         component: <UserDetails />,
+    },
+    {
+        type: "routes",
+        name: "Profile",
+        key: "productdetail",
+        icon: <Icon fontSize="small">person</Icon>,
+        route: "/userlist/view-user/team-details/:_id",
+        component: <UserTeamDetails />,
     },
     {
         type: "routes",
