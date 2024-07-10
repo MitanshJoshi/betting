@@ -9,6 +9,7 @@ import Header from "./Header";
 import ProfileInfoCard from "./ProfileInfoCard";
 import Document from "./DocumentDetails/documentDetails";
 import Transactions from "./Transactions/transactions";
+import UserTeams from "./user-teams";
 
 import { BASE_URL } from "BASE_URL";
 import { useParams } from "react-router-dom";
@@ -28,7 +29,6 @@ const UserDetails = () => {
     const fetchData = async () => {
         try {
             const token = localStorage.getItem("token");
-            console.log(token);
             const response = await fetch(
                 `${BASE_URL}/api/admin/findUser?userId=${_id}`,
                 {
@@ -40,7 +40,7 @@ const UserDetails = () => {
             );
             const responseData = await response.json();
             setuser(responseData.data);
-            console.log(responseData);
+            console.log(responseData.data);
             if (responseData.data.document_details.length > 0) {
                 setimg(responseData.data.document_details.adhaar_card_photo);
                 setimg2(responseData.data.document_details.pan_card_photo);
@@ -162,6 +162,13 @@ const UserDetails = () => {
                                 }
                                 transactions={user?.transactions}
                             />
+                        </MDBox>
+                    )}
+                {tabValue === 3 &&
+                    user.my_teams &&
+                    Object.keys(user.my_teams[0].match_details).length && (
+                        <MDBox mt={5} mb={3}>
+                            <UserTeams my_teams={user.my_teams} />
                         </MDBox>
                     )}
             </Header>
