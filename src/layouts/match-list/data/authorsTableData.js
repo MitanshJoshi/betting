@@ -52,6 +52,7 @@ export default function Data(
             { Header: "country", accessor: "country", align: "left" },
             { Header: "edit", accessor: "action", align: "center" },
             { Header: "view", accessor: "view", width: "10%", align: "center" },
+            { Header: "start match", accessor: "start_match", width: "10%", align: "center" },
         ],
 
         rows: team
@@ -181,6 +182,17 @@ export default function Data(
                         fontWeight="medium"
                     >
                         Edit
+                    </MDTypography>
+                ),
+                start_match: (
+                    <MDTypography
+                        component="a"
+                        href={`/score-board/${e._id}`}
+                        variant="caption"
+                        color="text"
+                        fontWeight="medium"
+                    >
+                        Start
                     </MDTypography>
                 ),
             })),

@@ -89,7 +89,8 @@ import Addwinningranges from "layouts/winning-range/addrange";
 import Editwinningranges from "layouts/winning-range/editrange";
 import Viewwinning from "layouts/winning-range/viewwinnig";
 import UserDetails from "layouts/user-list/user-details/userdetails";
-import UserTeamDetails from "layouts/user-list/user-details/user-team-details"
+import UserTeamDetails from "layouts/user-list/user-details/user-team-details";
+import ScoreBoard from "layouts/scoreboard/scoreboard";
 
 const routes = [
     {
@@ -212,7 +213,14 @@ const routes = [
     //   route: "/employee-list",
     //   component: <Employee />,
     // },
-
+    {
+        type: "route",
+        name: "Score Board",
+        key: "score-board",
+        icon: <Icon fontSize="small">add_box</Icon>,
+        route: "/score-board/:match_id",
+        component: <ScoreBoard />,
+    },
     {
         type: "collapse",
         name: "Change Password",

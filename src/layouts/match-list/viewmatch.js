@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 function Viewmatch() {
   const { _id } = useParams();
   const [match, setmatch] = useState([]);
-  console.log(match);
+  
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
