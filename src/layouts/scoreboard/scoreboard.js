@@ -75,6 +75,8 @@ const ScoreBoard = () => {
     const [openWicketForm, setOpenWicketForm] = useState(false);
     const [openNoBallForm, setOpenNoBallForm] = useState(false);
     const [openOverThrow, setOpenOverThrow] = useState(false);
+    const [overthrowBoundary, setOverthrowBoundary] = useState(0);
+    const [openNewInning, setOpenNewInning] = useState(false);
 
     const addBallToOvers = (overs) => {
         let [wholeOvers, balls] = overs.toString().split(".").map(Number);
@@ -320,7 +322,7 @@ const ScoreBoard = () => {
         }
     };
 
-    const getScoreBoard = async () => {
+    const getScoreBoard = async (inning) => {
         try {
             const token = localStorage.getItem("token");
             const response = await fetch(
@@ -338,6 +340,7 @@ const ScoreBoard = () => {
                 setScoreboard(responseData.data);
                 setBattingTeamId(responseData.data.battingTeam);
                 setBallingTeamId(responseData.data.ballingTeam);
+                setInning(responseData.data.inning);
                 const outPlayers = responseData.data.batting
                     .filter((item) => item?.isOut)
                     .map((player) => player.playerId);
@@ -347,7 +350,7 @@ const ScoreBoard = () => {
                 );
                 await getBallingTeanPlayers(responseData.data.ballingTeam);
                 await fetchMatchScore();
-                await fetchLastScore();
+                await fetchLastScore(inning);
             }
         } catch (error) {
             console.error("Error fetching data from the backend", error);
@@ -369,6 +372,7 @@ const ScoreBoard = () => {
             secondaryPlayerId: secondaryPlayerId || bowlingId,
             currBall: over,
             status: status,
+            overthrowBoundary: overthrowBoundary,
             run: parseInt(runs),
         };
 
@@ -396,8 +400,9 @@ const ScoreBoard = () => {
         }
 
         setRuns(0);
+        setOverthrowBoundary(0);
         setStatusType("");
-        getScoreBoard();
+        getScoreBoard(inning);
     };
 
     const fetchMatchScore = async () => {
@@ -423,11 +428,11 @@ const ScoreBoard = () => {
         }
     };
 
-    const fetchLastScore = async () => {
+    const fetchLastScore = async (inning) => {
         try {
             const token = localStorage.getItem("token");
             const response = await fetch(
-                `${BASE_URL}/api/scorecard/lastscore/${match_id}`,
+                `${BASE_URL}/api/scorecard/lastscore/${match_id}?inning=${inning}`,
                 {
                     method: "GET",
                     headers: {
@@ -443,7 +448,56 @@ const ScoreBoard = () => {
                 setBatsmanId2(responseData.data.batsman2Id);
                 addBallToOvers(responseData.data.currBall);
                 setBowlingId(responseData.data.ballerId);
-                setInning(responseData.data.inning);
+            }
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    const handleNewInning = async () => {
+        const dataToSend = {
+            inning: inning,
+            battingTeam: battingTeamId,
+            ballingTeam: ballingTeamId,
+        };
+
+        try {
+            const token = localStorage.getItem("token");
+            console.log(token);
+            const response = await fetch(
+                `${BASE_URL}/api/scoreboard/create/${match_id}`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: token,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(dataToSend),
+                }
+            );
+            const responseData = await response.json();
+            if (responseData.success) {
+                fetchMatchData();
+                getScoreBoard(inning);
+            }
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    const fetchLastInning = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(`${BASE_URL}/api/scoreboard/last/${match_id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+            const responseData = await response.json();
+            if (responseData.success) {
+                console.log("inning:",responseData.data);
+                getScoreBoard(responseData.data.inning);
             }
         } catch (error) {
             console.error("Error fetching data from the backend", error);
@@ -452,7 +506,7 @@ const ScoreBoard = () => {
 
     useEffect(() => {
         fetchMatchData();
-        getScoreBoard();
+        fetchLastInning()
     }, []);
 
     return (
@@ -473,11 +527,24 @@ const ScoreBoard = () => {
                                 coloredShadow="info"
                                 style={{
                                     position: "relative",
+                                    display: "flex",
+                                    justifyContent: "space-between",
                                 }}
                             >
                                 <MDTypography variant="h6" color="white">
                                     {matchDetails && matchDetails?.match_name}
                                 </MDTypography>
+                                <MDButton
+                                    size="small"
+                                    onClick={() => setOpenNewInning(true)}
+                                >
+                                    <MDTypography
+                                        variant="button"
+                                        color="black"
+                                    >
+                                        New Inning
+                                    </MDTypography>
+                                </MDButton>
                             </MDBox>
                             <MDBox p={3}>
                                 {!isStarted ? (
@@ -1700,6 +1767,7 @@ const ScoreBoard = () => {
                 open={openOverThrow}
                 onClose={() => {
                     setOpenOverThrow(false);
+                    setOverthrowBoundary(0);
                 }}
             >
                 <DialogTitle>Overthrow</DialogTitle>
@@ -1726,6 +1794,76 @@ const ScoreBoard = () => {
                         }}
                         label="Runs"
                     />
+                    <FormControl
+                        sx={{
+                            width: "50%",
+                            marginTop: "15px",
+                            marginRight: "15px",
+                        }}
+                    >
+                        <InputLabel id="overthrow-run">
+                            Overthrow Boundary
+                        </InputLabel>
+                        <Select
+                            value={overthrowBoundary}
+                            onChange={(e) =>
+                                setOverthrowBoundary(e.target.value)
+                            }
+                            sx={{
+                                height: "50px",
+                            }}
+                            labelId="overthrow-run"
+                            label="Overthrow Boundary"
+                        >
+                            <MenuItem value={0} selected>
+                                0
+                            </MenuItem>
+                            <MenuItem value={4} selected>
+                                4
+                            </MenuItem>
+                            <MenuItem value={6} selected>
+                                6
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            setOpenOverThrow(false);
+                            setOverthrowBoundary(0);
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        color="primary"
+                        onClick={() => {
+                            handleScoreCardSubmit("overthrow");
+                            setOpenOverThrow(false);
+                        }}
+                    >
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* New Inning Dialog */}
+            <Dialog
+                fullWidth
+                open={openNewInning}
+                onClose={() => {
+                    setOpenNewInning(false);
+                }}
+            >
+                <DialogTitle>New Inning</DialogTitle>
+                <DialogContent
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "15px",
+                    }}
+                >
                     <TextField
                         onInput={(e) =>
                             (e.target.value = e.target.value.replace(
@@ -1733,23 +1871,33 @@ const ScoreBoard = () => {
                                 ""
                             ))
                         }
+                        value={inning}
+                        onChange={(e) => setInning(e.target.value)}
                         variant="outlined"
                         sx={{
                             height: "50px",
                             marginTop: "15px",
                         }}
-                        label="Boundary"
+                        label="Inning"
                     />
                 </DialogContent>
                 <DialogActions>
                     <Button
                         onClick={() => {
-                            setOpenOverThrow(false);
+                            setOpenNewInning(false);
                         }}
                     >
                         Cancel
                     </Button>
-                    <Button color="primary">Ok</Button>
+                    <Button
+                        color="primary"
+                        onClick={() => {
+                            handleNewInning();
+                            setOpenNewInning(false);
+                        }}
+                    >
+                        Ok
+                    </Button>
                 </DialogActions>
             </Dialog>
         </DashboardLayout>
