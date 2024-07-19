@@ -79,7 +79,7 @@ const Teamplayer = () => {
             }));
 
             let tempPlayers = players.slice();
-
+            tempPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name));
             for (const team of responseData.data) {
                 const teamPlayersResponse = await getTeamPlayerById(team._id);
                 if (teamPlayersResponse) {

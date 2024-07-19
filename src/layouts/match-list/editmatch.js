@@ -38,6 +38,9 @@ const Editmatch = () => {
 
     const [errorMessage, setErrorMessage] = useState("false");
 
+    const [innings, setInnings] = useState("");
+    const [overs, setOvers] = useState("");
+
     const navigate = useNavigate();
     const { _id } = useParams();
 
@@ -153,6 +156,8 @@ const Editmatch = () => {
             setCountry(data.country);
             setState(data.state);
             setCity(data.city);
+            setInnings(data.innings);
+            setOvers(data.overs);
             indiaObject = countries.find((c) => c.name === data.country);
             const selectedState = indiaObject.states.find(
                 (state) => state.name === data.state
@@ -173,7 +178,9 @@ const Editmatch = () => {
             !vanue &&
             !city &&
             !state &&
-            !country
+            !country &&
+            !innings &&
+            !overs
         ) {
             setErrorMessage("Please Fill All Fields!");
             openErrorSB();
@@ -577,6 +584,58 @@ const Editmatch = () => {
                                                         )}
                                                 </Select>
                                             </FormControl>
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <label
+                                                htmlFor=""
+                                                style={{ fontWeight: "200" }}
+                                            >
+                                                Innings
+                                            </label>
+                                            <MDInput
+                                                type="text"
+                                                // label="Vanue"
+                                                name="category"
+                                                value={innings}
+                                                onInput={(e) =>
+                                                    (e.target.value =
+                                                        e.target.value.replace(
+                                                            /[^0-9]/g,
+                                                            ""
+                                                        ))
+                                                }
+                                                onChange={(e) =>
+                                                    setInnings(e.target.value)
+                                                }
+                                                fullWidth
+                                                // style={{ marginBottom: "20px" }}
+                                            />
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <label
+                                                htmlFor=""
+                                                style={{ fontWeight: "200" }}
+                                            >
+                                                Overs
+                                            </label>
+                                            <MDInput
+                                                type="text"
+                                                // label="Vanue"
+                                                name="category"
+                                                value={overs}
+                                                onInput={(e) =>
+                                                    (e.target.value =
+                                                        e.target.value.replace(
+                                                            /[^0-9]/g,
+                                                            ""
+                                                        ))
+                                                }
+                                                onChange={(e) =>
+                                                    setOvers(e.target.value)
+                                                }
+                                                fullWidth
+                                                // style={{ marginBottom: "20px" }}
+                                            />
                                         </MDBox>
                                         <MDBox mt={4} mb={1}>
                                             <MDButton
