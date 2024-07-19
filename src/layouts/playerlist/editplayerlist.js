@@ -223,22 +223,22 @@ const Editplayerlist = () => {
         fetchData();
     }, []);
     function handleDateChange(selectedDate) {
-        // Check if the selected date is not in the future
-        if (new Date(selectedDate) > new Date()) {
-            setErrorMessage("Please select a date that is not in the future.");
-            openErrorSB();
-            return;
-        }
+        // // Check if the selected date is not in the future
+        // if (new Date(selectedDate) > new Date()) {
+        //     setErrorMessage("Please select a date that is not in the future.");
+        //     openErrorSB();
+        //     return;
+        // }
 
-        // Check if the selected date is within 60 years ago
-        if (
-            new Date().getFullYear() - new Date(selectedDate).getFullYear() >
-            60
-        ) {
-            setErrorMessage("Please select a date within the last 60 years.");
-            openErrorSB();
-            return;
-        }
+        // // Check if the selected date is within 60 years ago
+        // if (
+        //     new Date().getFullYear() - new Date(selectedDate).getFullYear() >
+        //     60
+        // ) {
+        //     setErrorMessage("Please select a date within the last 60 years.");
+        //     openErrorSB();
+        //     return;
+        // }
 
         // If the date is valid, set it to state or do whatever you need
         setage(moment().diff(selectedDate, "year"));
