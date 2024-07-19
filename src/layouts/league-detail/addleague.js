@@ -18,17 +18,19 @@ import Footer from "examples/Footer";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { BASE_URL } from "BASE_URL";
+import { FormControl, MenuItem, Select } from "@mui/material";
 // import
 const Addleague = () => {
-
     const [errorMessage, setErrorMessage] = useState("");
     const [successSB, setSuccessSB] = useState(false);
     const [errorSB, setErrorSB] = useState(false);
     const [league_name, setleaguename] = useState("");
     const [end_date, setenddate] = useState("");
     const [start_date, setstartdate] = useState("");
+    const [matchTypeId, setMatchTypeId] = useState("");
+    const [matchType, setMatchType] = useState([]);
     const navigate = useNavigate();
 
     const openSuccessSB = () => setSuccessSB(true);
@@ -66,15 +68,35 @@ const Addleague = () => {
 
     const handleChange = (e) => {
         setleaguename(e.target.value);
-    }
+    };
 
     const handleenddate = (e) => {
         setenddate(e.target.value);
-    }
+    };
 
     const handlestartdate = (e) => {
         setstartdate(e.target.value);
-    }
+    };
+
+    const fetchMatchType = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            console.log(token);
+            const response = await fetch(`${BASE_URL}/api/matchtype`, {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+            const responseData = await response.json();
+            console.log(responseData);
+            if (responseData.success) {
+                setMatchType(responseData.data);
+            }
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
 
     const handleSubmit = async () => {
         if (!league_name || !end_date || !start_date) {
@@ -100,7 +122,8 @@ const Addleague = () => {
                     body: JSON.stringify({
                         league_name,
                         end_date,
-                        start_date
+                        start_date,
+                        matchType: matchTypeId,
                     }),
                 }
             );
@@ -116,7 +139,11 @@ const Addleague = () => {
         } catch (error) {
             console.error("Error:", error);
         }
-    }
+    };
+
+    useEffect(() => {
+        fetchMatchType();
+    }, []);
 
     return (
         <DashboardLayout>
@@ -147,19 +174,25 @@ const Addleague = () => {
                                     <Grid item xs={12} md={6} xl={6} px={2}>
                                         <MDBox mb={2}>
                                             <div className="mb-2">
-                                                <label htmlFor="">League-Name</label>
+                                                <label htmlFor="">
+                                                    League-Name
+                                                </label>
                                                 <MDInput
                                                     type="text"
                                                     name="category"
                                                     value={league_name}
                                                     onChange={handleChange}
                                                     fullWidth
-                                                    style={{ marginBottom: "20px" }}
+                                                    style={{
+                                                        marginBottom: "20px",
+                                                    }}
                                                 />
                                             </div>
                                         </MDBox>
                                         <MDBox mb={2}>
-                                            <label htmlFor="">League-StartDate</label>
+                                            <label htmlFor="">
+                                                League-StartDate
+                                            </label>
                                             <MDInput
                                                 type="date"
                                                 label=""
@@ -172,7 +205,9 @@ const Addleague = () => {
                                         </MDBox>
                                         <MDBox mb={2}>
                                             <div className="mb-2">
-                                                <label htmlFor="">League-EndDate</label>
+                                                <label htmlFor="">
+                                                    League-EndDate
+                                                </label>
                                                 <MDInput
                                                     type="date"
                                                     label=""
@@ -180,9 +215,48 @@ const Addleague = () => {
                                                     value={end_date}
                                                     onChange={handleenddate}
                                                     fullWidth
-                                                    style={{ marginBottom: "20px" }}
+                                                    style={{
+                                                        marginBottom: "20px",
+                                                    }}
                                                 />
                                             </div>
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <label
+                                                htmlFor=""
+                                                style={{ fontWeight: "200" }}
+                                            >
+                                                Match Type
+                                            </label>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={matchTypeId}
+                                                    onChange={(e) => {
+                                                        setMatchTypeId(
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                    // label="Select Team1"
+                                                    style={{
+                                                        padding: "10px 0px",
+                                                    }}
+                                                >
+                                                    <MenuItem value="">
+                                                        Select
+                                                    </MenuItem>
+                                                    {matchType &&
+                                                        matchType.map((e) => (
+                                                            <MenuItem
+                                                                key={e._id}
+                                                                value={e._id}
+                                                            >
+                                                                {e.name}
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                         <MDBox mt={4} mb={1}>
                                             <MDButton

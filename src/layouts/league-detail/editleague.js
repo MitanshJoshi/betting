@@ -20,7 +20,7 @@ import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "BASE_URL";
-import { Input } from "@mui/material";
+import { FormControl, Input, MenuItem, Select } from "@mui/material";
 import moment from "moment";
 
 const Editleague = () => {
@@ -34,6 +34,10 @@ const Editleague = () => {
     const openErrorSB = () => setErrorSB(true);
     const closeErrorSB = () => setErrorSB(false);
     const navigate = useNavigate();
+
+    const [matchTypeId, setMatchTypeId] = useState("");
+    const [matchType, setMatchType] = useState([]);
+
     const renderSuccessSB = (
         <MDSnackbar
             color="success"
@@ -68,7 +72,25 @@ const Editleague = () => {
     const [end_date, setenddate] = useState("");
     const [start_date, setstartdate] = useState("");
 
-    console.log(end_date)
+    const fetchMatchType = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            console.log(token);
+            const response = await fetch(`${BASE_URL}/api/matchtype`, {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+            const responseData = await response.json();
+            console.log(responseData);
+            if (responseData.success) {
+                setMatchType(responseData.data);
+            }
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
 
     const handleChange = (e) => {
         setleaguename(e.target.value);
@@ -178,6 +200,7 @@ const Editleague = () => {
                 setleaguename(leaguedata.league_name);
                 setenddate(moment(leaguedata.end_date).format("YYYY-MM-DD"));
                 setstartdate(moment(leaguedata.start_date).format("YYYY-MM-DD"));
+                setMatchTypeId(leaguedata.matchType)
             }
         } catch (error) {
             console.error("Error fetching data from the backend", error);
@@ -186,6 +209,7 @@ const Editleague = () => {
 
     useEffect(() => {
         fetchData();
+        fetchMatchType()
     }, []);
 
     return (
@@ -268,6 +292,43 @@ const Editleague = () => {
                                                 fullWidth
                                                 style={{ marginBottom: "20px" }}
                                             />
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <label
+                                                htmlFor=""
+                                                style={{ fontWeight: "200" }}
+                                            >
+                                                Match Type
+                                            </label>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={matchTypeId}
+                                                    onChange={(e) => {
+                                                        setMatchTypeId(
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                    // label="Select Team1"
+                                                    style={{
+                                                        padding: "10px 0px",
+                                                    }}
+                                                >
+                                                    <MenuItem value="">
+                                                        Select
+                                                    </MenuItem>
+                                                    {matchType &&
+                                                        matchType.map((e) => (
+                                                            <MenuItem
+                                                                key={e._id}
+                                                                value={e._id}
+                                                            >
+                                                                {e.name}
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                         <MDBox mt={4} mb={1}>
                                             <MDButton
