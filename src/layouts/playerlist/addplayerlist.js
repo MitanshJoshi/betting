@@ -184,24 +184,24 @@ const Addplayerlist = () => {
         } catch (error) {}
     };
     const handleDateChange = (e) => {
-        const selectedDate = new Date(e.target.value);
-        const maxDate = new Date();
-        maxDate.setFullYear(maxDate.getFullYear() - 20); // 20 years ago from today
+        // const selectedDate = new Date(e.target.value);
+        // const maxDate = new Date();
+        // maxDate.setFullYear(maxDate.getFullYear() - 20); // 20 years ago from today
 
-        const minDate = new Date();
-        minDate.setFullYear(minDate.getFullYear() - 100); // 100 years ago from today
+        // const minDate = new Date();
+        // minDate.setFullYear(minDate.getFullYear() - 100); // 100 years ago from today
 
-        if (selectedDate > maxDate) {
-            setErrorMessage("Please select a date within the last 20 years.");
-            openErrorSB();
-            return;
-        }
+        // if (selectedDate > maxDate) {
+        //     setErrorMessage("Please select a date within the last 20 years.");
+        //     openErrorSB();
+        //     return;
+        // }
 
-        if (selectedDate < minDate) {
-            setErrorMessage("Please select a date within the last 100 years.");
-            openErrorSB();
-            return;
-        }
+        // if (selectedDate < minDate) {
+        //     setErrorMessage("Please select a date within the last 100 years.");
+        //     openErrorSB();
+        //     return;
+        // }
         setage(moment().diff(e.target.value, "year"));
         setdate(e.target.value);
     };
