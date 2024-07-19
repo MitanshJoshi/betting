@@ -179,7 +179,6 @@ const Matchdetail = () => {
                                         width="150px"
                                     >
                                         {e.league_name}
-                                        {id}
                                     </MenuItem>
                                 ))}
                         </Select>
