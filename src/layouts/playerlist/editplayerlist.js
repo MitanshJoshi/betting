@@ -386,38 +386,37 @@ const Editplayerlist = () => {
                                             />
                                         </MDBox>
                                         <MDBox mb={0} mt={0}>
-                                            <label htmlFor="">
-                                                Player nationality
-                                            </label>
-                                            <MDInput
-                                                type="text"
-                                                onInput={(e) => {
-                                                    let value =
-                                                        e.target.value.replace(
-                                                            /[^ a-z A-Z]/g,
-                                                            ""
-                                                        ); // Remove non-numeric characters
-                                                    // Check if the first digit is zero
-                                                    if (
-                                                        value.length > 0 &&
-                                                        value[0] === " "
-                                                    ) {
-                                                        // If the first digit is zero, remove it
-                                                        value = value.slice(1);
+                                            <FormControl fullWidth>
+                                                <label htmlFor="">
+                                                    Player Nationality
+                                                </label>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    onChange={(e) =>
+                                                        setnationality(
+                                                            e.target.value
+                                                        )
                                                     }
-                                                    // Set the updated value
-                                                    e.target.value = value;
-                                                }}
-                                                name="nationality"
-                                                value={nationality}
-                                                onChange={(e) =>
-                                                    setnationality(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                fullWidth
-                                                style={{ marginBottom: "20px" }}
-                                            />
+                                                    value={nationality}
+                                                    label="Select Team1"
+                                                    style={{
+                                                        padding: "10px 0px",
+                                                    }}
+                                                >
+                                                    <MenuItem value="">
+                                                        Select
+                                                    </MenuItem>
+                                                    {countries &&
+                                                        countries.map((e) => (
+                                                            <MenuItem
+                                                                value={e.name}
+                                                            >
+                                                                {e.name}
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                     </Grid>
                                     <Grid item xs={12} md={6} xl={6} px={2}>
