@@ -91,6 +91,15 @@ import Viewwinning from "layouts/winning-range/viewwinnig";
 import UserDetails from "layouts/user-list/user-details/userdetails";
 import UserTeamDetails from "layouts/user-list/user-details/user-team-details";
 import ScoreBoard from "layouts/scoreboard/scoreboard";
+import PointFor from "layouts/point-for";
+import PointType from "layouts/point-type";
+import AddPointType from "layouts/point-type/add-point-type";
+import EditPointType from "layouts/point-type/edit-point-type";
+import MatchType from "layouts/match-type";
+import AddMatchType from "layouts/match-type/add-match-type";
+import EditMatchType from "layouts/match-type/edit-match-types";
+import PointSystem from "layouts/point-system";
+import AddPointSystem from "layouts/point-system/add-point-system";
 
 const routes = [
     {
@@ -148,6 +157,78 @@ const routes = [
         icon: <Icon fontSize="small">people</Icon>,
         route: "/match-detail",
         component: <Matchdetail />,
+    },
+    {
+        type: "collapse",
+        name: "Points For",
+        key: "points-for",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/points-for",
+        component: <PointFor />,
+    },
+    {
+        type: "collapse",
+        name: "Points Type",
+        key: "points-type",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/points-type",
+        component: <PointType />,
+    },
+    {
+        type: "route",
+        name: "Add Points Type",
+        key: "add-points-type",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/points-type/add-points-type",
+        component: <AddPointType />,
+    },
+    {
+        type: "route",
+        name: "Add Points Type",
+        key: "add-points-type",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/points-type/edit-points-type/:id",
+        component: <EditPointType />,
+    },
+    {
+        type: "collapse",
+        name: "Match Type",
+        key: "match-type",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/match-type",
+        component: <MatchType />,
+    },
+    {
+        type: "route",
+        name: "Add Match Type",
+        key: "add-match-type",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/match-type/add-match-type",
+        component: <AddMatchType />,
+    },
+    {
+        type: "route",
+        name: "Edit Match Type",
+        key: "edit-match-type",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/match-type/edit-match-type/:id",
+        component: <EditMatchType />,
+    },
+    {
+        type: "collapse",
+        name: "Point System",
+        key: "point-system",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/point-system",
+        component: <PointSystem />,
+    },
+    {
+        type: "route",
+        name: "Add Point System",
+        key: "add-point-system",
+        icon: <Icon fontSize="small">people</Icon>,
+        route: "/point-system/add-point-system",
+        component: <AddPointSystem />,
     },
     {
         type: "collapse",
