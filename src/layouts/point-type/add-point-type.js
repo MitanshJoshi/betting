@@ -228,40 +228,33 @@ const AddPointType = () => {
                                 <MDBox mx={2} mt={-3} py={2} px={2}>
                                     <FormGroup>
                                         <Grid container spacing={2}>
-                                            {takenPointFor.length !== 0 &&
-                                                data
-                                                    .filter((x) =>
-                                                        takenPointFor?.includes(
-                                                            x._id
-                                                        )
-                                                    )
-                                                    .map((item) => (
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            sm={6}
-                                                            md={3}
-                                                            key={item._id}
-                                                        >
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={selectedIds.includes(
-                                                                            item._id
-                                                                        )}
-                                                                        onChange={() =>
-                                                                            handleCheckboxChange(
-                                                                                item._id
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                }
-                                                                label={
-                                                                    item.point_for_name
+                                            {data.map((item) => (
+                                                <Grid
+                                                    item
+                                                    xs={12}
+                                                    sm={6}
+                                                    md={3}
+                                                    key={item._id}
+                                                >
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={selectedIds.includes(
+                                                                    item._id
+                                                                )}
+                                                                onChange={() =>
+                                                                    handleCheckboxChange(
+                                                                        item._id
+                                                                    )
                                                                 }
                                                             />
-                                                        </Grid>
-                                                    ))}
+                                                        }
+                                                        label={
+                                                            item.point_for_name
+                                                        }
+                                                    />
+                                                </Grid>
+                                            ))}
                                         </Grid>
                                     </FormGroup>
                                 </MDBox>
