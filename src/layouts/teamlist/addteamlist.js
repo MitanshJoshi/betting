@@ -21,6 +21,8 @@ import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "BASE_URL";
+import { FormControl, MenuItem, Select } from "@mui/material";
+import { MuiColorInput } from "mui-color-input";
 // import
 const Addteamlist = () => {
     const [successSB, setSuccessSB] = useState(false);
@@ -30,6 +32,10 @@ const Addteamlist = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [short_name, setShortName] = useState("");
     const [team_name, setTeamName] = useState("");
+
+    const [league, setleague] = useState([]);
+    const [leagueId, setLeagueId] = useState("");
+    const [colorCode, setColorCode] = useState("#FFFFFF");
 
     const navigate = useNavigate();
 
@@ -49,7 +55,14 @@ const Addteamlist = () => {
     };
 
     const handleSubmit = async () => {
-        if (!logo || !selectedFile || !short_name || !team_name) {
+        if (
+            !logo ||
+            !selectedFile ||
+            !short_name ||
+            !team_name ||
+            !leagueId ||
+            !colorCode
+        ) {
             setErrorMessage("Please Fill All Fields!");
             openErrorSB();
             return;
@@ -60,6 +73,8 @@ const Addteamlist = () => {
         formData.append("other_photo", selectedFile);
         formData.append("short_name", short_name);
         formData.append("team_name", team_name);
+        formData.append("league_id", leagueId);
+        formData.append("color_code", colorCode);
 
         try {
             const response = await fetch(`${BASE_URL}/api/team/createTeam`, {
@@ -111,6 +126,26 @@ const Addteamlist = () => {
             bgWhite
         />
     );
+
+    const fetchLeagues = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`${BASE_URL}/api/league/displayList`, {
+                method: "GET",
+                headers: {
+                    Authorization: token,
+                },
+            });
+            const responseData = await response.json();
+            setleague(responseData.data);
+        } catch (error) {
+            console.error("Error fetching data from the backend", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchLeagues();
+    }, []);
 
     return (
         <DashboardLayout>
@@ -174,7 +209,6 @@ const Addteamlist = () => {
                                                 type="file"
                                                 onChange={handleImageChange}
                                                 fullWidth
-                                                style={{ marginBottom: "20px" }}
                                             />
                                             {selectedFile && (
                                                 <img
@@ -190,6 +224,57 @@ const Addteamlist = () => {
                                                     }}
                                                 />
                                             )}
+                                        </MDBox>
+                                        <MDBox mb={2}>
+                                            <label
+                                                htmlFor="team-other-photo"
+                                                style={{ marginRight: "15px" }}
+                                            >
+                                                Color Code
+                                            </label>
+                                            <MuiColorInput
+                                                value={colorCode}
+                                                format="hex"
+                                                onChange={(e) =>
+                                                    setColorCode(e)
+                                                }
+                                            />
+                                        </MDBox>
+                                        <MDBox>
+                                            <label
+                                                htmlFor=""
+                                                style={{ fontWeight: "200" }}
+                                            >
+                                                League
+                                            </label>
+                                            <FormControl fullWidth>
+                                                <Select
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={leagueId}
+                                                    onChange={(e) =>
+                                                        setLeagueId(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    // label="Select Team1"
+                                                    style={{
+                                                        padding: "10px 0px",
+                                                    }}
+                                                >
+                                                    <MenuItem value="">
+                                                        Select
+                                                    </MenuItem>
+                                                    {league.length !== 0 &&
+                                                        league.map((e) => (
+                                                            <MenuItem
+                                                                value={e._id}
+                                                            >
+                                                                {e.league_name}
+                                                            </MenuItem>
+                                                        ))}
+                                                </Select>
+                                            </FormControl>
                                         </MDBox>
                                     </Grid>
                                     <Grid item xs={12} md={6} xl={6} px={2}>
