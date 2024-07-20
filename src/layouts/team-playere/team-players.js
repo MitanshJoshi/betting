@@ -12,6 +12,7 @@ import { Grid as Loader } from "react-loader-spinner";
 import { Button, FormControl, InputLabel, Select } from "@material-ui/core";
 import MDAvatar from "components/MDAvatar";
 import { useSpring, animated } from "@react-spring/web";
+import MDInput from "components/MDInput";
 
 const Teamplayer = () => {
     const [players, setPlayers] = useState([]);
@@ -23,6 +24,7 @@ const Teamplayer = () => {
     const [league_id, setleague_id] = useState("");
     const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
     const [successSnackbarMessage, setSuccessSnackbarMessage] = useState("");
+    const [playerName, setPlayerName] = useState("");
 
     const fetchleague = async () => {
         try {
@@ -79,7 +81,9 @@ const Teamplayer = () => {
             }));
 
             let tempPlayers = players.slice();
-            tempPlayers.sort((a, b) => a.player_name.localeCompare(b.player_name));
+            tempPlayers.sort((a, b) =>
+                a.player_name.localeCompare(b.player_name)
+            );
             for (const team of responseData.data) {
                 const teamPlayersResponse = await getTeamPlayerById(team._id);
                 if (teamPlayersResponse) {
@@ -305,9 +309,7 @@ const Teamplayer = () => {
         }
     };
 
-    const handleChangeLeague = (e) => {
-        setleague_id(e.target.value);
-    };
+    console.log(playerName);
 
     return (
         <DashboardLayout>
@@ -413,8 +415,39 @@ const Teamplayer = () => {
                                                 )}
                                             </Grid>
                                             <Grid item xs={12} md={6}>
+                                                <MDBox
+                                                    mb={2}
+                                                    sx={{
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                    }}
+                                                >
+                                                    <label htmlFor="">
+                                                        Player Name
+                                                    </label>
+                                                    <input
+                                                        value={playerName}
+                                                        onChange={(e) =>
+                                                            setPlayerName(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                </MDBox>
                                                 <PlayerContainer
-                                                    players={players}
+                                                    players={players.filter(
+                                                        (x) =>
+                                                            x.player_name
+                                                                .toLowerCase()
+                                                                .includes(
+                                                                    playerName
+                                                                )
+                                                    )}
+                                                    playerName={playerName}
+                                                    setPlayerName={
+                                                        setPlayerName
+                                                    }
+                                                    setPlayers={setPlayers}
                                                     id="players"
                                                     title="Available Players"
                                                 />
@@ -449,7 +482,7 @@ const Teamplayer = () => {
     );
 };
 
-const PlayerContainer = ({ players, id, title }) => {
+const PlayerContainer = ({ players, id, title, playerName, setPlayerName }) => {
     const { setNodeRef } = useDroppable({
         id: id,
     });
